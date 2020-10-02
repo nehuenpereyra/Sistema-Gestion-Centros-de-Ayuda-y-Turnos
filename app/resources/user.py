@@ -1,5 +1,4 @@
 from flask import redirect, render_template, request, url_for, session, abort
-from app.db import connection
 from app.models.user import User
 from app.helpers.auth import authenticated
 
@@ -8,9 +7,8 @@ def index():
     if not authenticated(session):
         abort(401)
 
-    conn = connection()
-    users = User.all(conn)
-
+    users = User.all()
+#<li>{{ user.email }} - {{ user.first_name }} - {{ user.last_name }} - {{ user.password }}</li>
     return render_template("user/index.html", users=users)
 
 
@@ -25,6 +23,8 @@ def create():
     if not authenticated(session):
         abort(401)
 
-    conn = connection()
-    User.create(conn, request.form)
+    User(email=request.form["email"], first_name=request.form["first_name"],
+    last_name=request.form["last_name"],password=request.form["password"]).save()
+    #conn = connection()
+    #User.create(conn, request.form)
     return redirect(url_for("user_index"))

@@ -25,6 +25,9 @@ class DevelopmentConfig(BaseConfig):
     DB_USER = environ.get("DB_USER")
     DB_PASS = environ.get("DB_PASS")
     DB_NAME = environ.get("DB_NAME")
+    SQLALCHEMY_DATABASE_URI = "mysql://grupo20:grupo20@localhost:3306/grupo20"
+    SQLALCHEMY_ECHO = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class TestingConfig(BaseConfig):

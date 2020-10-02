@@ -1,34 +1,47 @@
-class User(object):
-    @classmethod
-    def all(cls, conn):
-        sql = "SELECT * FROM users"
-        cursor = conn.cursor()
-        cursor.execute(sql)
+from app import db
+from sqlalchemy.ext.hybrid import hybrid_property
 
-        return cursor.fetchall()
+class User(db.Model):
 
-    @classmethod
-    def create(cls, conn, data):
-        sql = """
-            INSERT INTO users (email, password, first_name, last_name)
-            VALUES (%s, %s, %s, %s)
-        """
+    __tablename__ = 'users'
 
-        cursor = conn.cursor()
-        cursor.execute(sql, list(data.values()))
-        conn.commit()
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(30), nullable=False)
+    last_name = db.Column(db.String(30), nullable=False)
+    email = db.Column(db.String(30), unique=True, nullable=False)
+    password = db.Column(db.String(30), nullable=False)
 
-        return True
 
-    @classmethod
-    def find_by_email_and_pass(cls, conn, email, password):
-        sql = """
-            SELECT * FROM users AS u
-            WHERE u.email = %s AND u.password = %s
-        """
+    @hybrid_property
+    def _email(self):
+        return self.email
+    
+    @hybrid_property
+    def _first_name(self):
+        return self.first_name
+    
+    @hybrid_property
+    def _last_name(self):
+        return self.last_name
 
-        cursor = conn.cursor()
-        cursor.execute(sql, (email, password))
 
-        return cursor.fetchone()
+    @staticmethod
+    def all():
+        return User.query.all()
+
+    def __repr__(self):
+        return f'<User {self.email}>'
+    
+    def save(self):
+        if not self.id:
+            db.session.add(self)
+        db.session.commit()
+
+    @staticmethod
+    def get_by_id(id):
+        return User.query.get(id)
+
+    @staticmethod
+    def find_by_email_and_pass(email, password):
+        return User.query.filter_by(email=email).filter_by(password=password)
 
