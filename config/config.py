@@ -25,7 +25,7 @@ class DevelopmentConfig(BaseConfig):
     DB_USER = environ.get("DB_USER")
     DB_PASS = environ.get("DB_PASS")
     DB_NAME = environ.get("DB_NAME")
-    SQLALCHEMY_DATABASE_URI = "mysql://grupo20:grupo20@localhost:3306/grupo20"
+    SQLALCHEMY_DATABASE_URI = f"mysql://{DB_USER}:{DB_PASS}@{DB_HOST}:3306/{DB_NAME}"
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -40,6 +40,9 @@ class TestingConfig(BaseConfig):
     DB_USER = environ.get("DB_USER")
     DB_PASS = environ.get("DB_PASS")
     DB_NAME = environ.get("DB_NAME")
+    SQLALCHEMY_DATABASE_URI = f"mysql://{DB_USER}:{DB_PASS}@{DB_HOST}:3306/{DB_NAME}"
+    SQLALCHEMY_ECHO = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class ProductionConfig(BaseConfig):
@@ -51,6 +54,9 @@ class ProductionConfig(BaseConfig):
     DB_USER = environ.get("DB_USER", "grupo20")
     DB_PASS = environ.get("DB_PASS", "MzZiMmU1ZTA5N2Q0")
     DB_NAME = environ.get("DB_NAME", "grupo20")
+    SQLALCHEMY_DATABASE_URI = f"mysql://{DB_USER}:{DB_PASS}@{DB_HOST}:3306/{DB_NAME}"
+    SQLALCHEMY_ECHO = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 config = dict(

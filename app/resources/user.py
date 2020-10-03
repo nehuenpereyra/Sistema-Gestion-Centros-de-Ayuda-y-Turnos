@@ -8,7 +8,6 @@ def index():
         abort(401)
 
     users = User.all()
-#<li>{{ user.email }} - {{ user.first_name }} - {{ user.last_name }} - {{ user.password }}</li>
     return render_template("user/index.html", users=users)
 
 
@@ -25,6 +24,5 @@ def create():
 
     User(email=request.form["email"], first_name=request.form["first_name"],
     last_name=request.form["last_name"],password=request.form["password"]).save()
-    #conn = connection()
-    #User.create(conn, request.form)
+    
     return redirect(url_for("user_index"))

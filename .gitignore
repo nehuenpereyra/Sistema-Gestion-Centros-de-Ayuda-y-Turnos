@@ -103,7 +103,10 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+#prettierignore
+.prettierignore
 
+#Otros
 db/db.sqlite
 
 flask_session
