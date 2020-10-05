@@ -1,28 +1,30 @@
-from flask import redirect, render_template, request, url_for, session, abort
+from flask import redirect, render_template, request, url_for, abort
 from app.models.user import User
-from app.helpers.auth import authenticated
+from app.helpers.forms.SignupForm import SignupForm
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_user, login_required
 
 # Protected resources
+@login_required
 def index():
-    if not authenticated(session):
-        abort(401)
 
     users = User.all()
     return render_template("user/index.html", users=users)
 
-
+@login_required
 def new():
-    if not authenticated(session):
-        abort(401)
 
-    return render_template("user/new.html")
+    return render_template("user/new.html",form=SignupForm())
 
-
+@login_required
 def create():
-    if not authenticated(session):
-        abort(401)
 
-    User(email=request.form["email"], first_name=request.form["first_name"],
-    last_name=request.form["last_name"],password=request.form["password"]).save()
-    
-    return redirect(url_for("user_index"))
+    form = SignupForm()
+    if form.validate_on_submit():
+        user = User(username= form.username.data,email=form.email.data, 
+        first_name=form.first_name.data, last_name=form.last_name.data,
+        password=generate_password_hash(form.password.data)).save()
+        login_user(user, remember=True) # Dejamos al usuario logueado
+        return redirect(url_for("user_index"))
+        
+    return render_template("user/new.html",form=form)

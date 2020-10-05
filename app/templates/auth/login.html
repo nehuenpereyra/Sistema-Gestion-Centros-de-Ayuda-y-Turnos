@@ -1,13 +1,41 @@
 {% extends "layout.html" %}
+
+{% macro input(field) %}
+    {{ field.label }}
+            {% if ( field.errors|length == 0) %}
+              {{ field(class_="form-control") }}
+            {% else %}
+              {{ field(class_="form-control is-invalid") }}
+              {% for error in field.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            {% endif %}
+{% endmacro %}
+
 {% block title %}Login{% endblock %}
+
 {% block head %}
   {{ super() }}
 {% endblock %}
+
 {% block content %}
   <h1>Iniciar sesión</h1>
-  <form action="{{ url_for('auth_authenticate') }}" method="POST">
-    <input name="email" placeholder="Correo" required/>
-    <input type="password" name="password" placeholder="Clave" required/>
-    <input type="submit" value="Login">
+  <form action="{{ url_for('auth_authenticate') }}" method="post"  class="needs-validation" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-group col-md-6">
+          {{input(form.email)}}
+        </div>
+        <div class="form-group col-md-6">
+            {{input(form.password)}}
+        </div>
+        {% if authError == True %}
+          <div class="alert alert-danger" role="alert">
+            Usuario o clave incorrecto.
+          </div> 
+        {% endif %}
+        <div>{{ form.remember_me() }} {{ form.remember_me.label }}</div>
+        <p>
+            {{ form.submit(class_="btn btn-primary") }}
+        </p>
   </form>
 {% endblock %}

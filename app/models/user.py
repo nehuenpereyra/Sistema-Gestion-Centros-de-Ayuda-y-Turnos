@@ -1,7 +1,9 @@
 from app.db import db
 from sqlalchemy.ext.hybrid import hybrid_property
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
-class User(db.Model):
+class User(UserMixin, db.Model):
 
     __tablename__ = 'users'
 
@@ -9,7 +11,7 @@ class User(db.Model):
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(30), unique=True, nullable=False)
-    password = db.Column(db.String(30), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
     username = db.Column(db.String(30), nullable=False)
 
 
@@ -24,6 +26,14 @@ class User(db.Model):
     @hybrid_property
     def get_last_name(self):
         return self.last_name
+    
+    @hybrid_property
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
     @staticmethod
     def all():
@@ -32,10 +42,6 @@ class User(db.Model):
     @staticmethod
     def get_by_id(id):
         return User.query.get(id)
-
-    @staticmethod
-    def find_by_email_and_pass(email, password):
-        return User.query.filter_by(email=email).filter_by(password=password).first()
 
     @staticmethod
     def find_by_email(email):

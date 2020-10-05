@@ -7,7 +7,6 @@ migrate = Migrate()  # Se crea un objeto de tipo Migrate
 seeder = FlaskSeeder()
 
 def set_db(app):
-
     # Configura la base de datos
     db.init_app(app)
     migrate.init_app(app, db)  # Se inicializa el objeto migrate  
@@ -15,3 +14,8 @@ def set_db(app):
     with app.app_context():  # Crea un contexto de aplicación
         db.create_all() # Crea las tablas de la base de datos
     
+def delete_db(app):
+     with app.app_context():
+            # Elimina todas las tablas de la base de datos
+            db.session.remove()
+            db.drop_all()
