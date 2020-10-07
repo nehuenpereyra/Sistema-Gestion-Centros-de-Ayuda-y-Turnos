@@ -5,20 +5,14 @@ from .db import set_db, delete_db
 from config.routes import set_routes
 from app.helpers.login import set_login, authenticated
 
-import os
+def create_app(environment="development" ):
 
-def create_app(environment=None):
-
-    os.environ["FLASK_ENV"] = "testing"
     # Configuración inicial de la app
     app = Flask(__name__)
     
     # Carga de la configuración
-    if environment is not None:
-        env = environment
-    else:
-        env = environ.get("FLASK_ENV", "development")
-    
+    env = environ.get("FLASK_ENV", "development")
+
     app.config.from_object(config[env])
 
     # Añade a la app flask login

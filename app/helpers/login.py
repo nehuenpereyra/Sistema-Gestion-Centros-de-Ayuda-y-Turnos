@@ -3,6 +3,7 @@ from app.models.user import User
 
 login_manager = LoginManager()
 #login_manager.login_view = "error"
+#login_manager.session_protection = "strong"
 
 def set_login(app):
     login_manager.init_app(app)

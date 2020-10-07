@@ -13,7 +13,7 @@ def authenticate():
     if form.validate_on_submit():
         user = User.find_by_email(form.email.data)
         if (user is not None) and (user.check_password(form.password.data)):
-                login_user(user, remember=form.remember_me.data)
+                login_user(user, remember=form.remember_me.data) #form.remember_me.data
                 return redirect(url_for("home")) 
     #return redirect(url_for("auth_login"))
     return render_template("auth/login.html", form=form, authError=True)
