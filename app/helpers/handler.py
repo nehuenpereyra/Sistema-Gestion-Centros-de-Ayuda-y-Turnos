@@ -17,3 +17,10 @@ def unauthorized_error(e):
     return render_template("error.html", **kwargs), 401
 
 
+def forbidden_error(e):
+    kwargs = {
+        "error_name": "403 You don't have permission for this",
+        "error_description": "No tienes permiso para esto",
+    }
+    return render_template("error.html", **kwargs), 403
+

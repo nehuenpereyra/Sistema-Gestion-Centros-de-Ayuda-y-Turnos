@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion p-0" style="/*background-color: #7eb5b8;*/background: linear-gradient(45deg, #3a6ba6, #7eb5b8);">
+            <div class="container-fluid d-flex flex-column p-0">
+                <ul class="nav navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href=""><i class="fas fa-user"></i><span>Usuarios</span></a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="{{ url_for('configuration_edit') }}"><i class="fas fa-tools"></i><span>Configuración</span></a></li>
+                </ul>
+                <div class="text-center d-none d-md-inline">
+                  <!--<button class="btn rounded-circle border-0" id="sidebarToggle" type="button" ></i></button> -->
+                </div>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div class="container-fluid">
+                    {% block sub_content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
