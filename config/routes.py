@@ -2,13 +2,18 @@ from flask import render_template
 from app.helpers import handler
 from app.resources import user
 from app.resources import auth
+from app.helpers.login import authenticated
+from flask import redirect, url_for
 
 def set_routes(app):
 
     # Ruta para el Home (usando decorator)
     @app.route("/")
     def home():
-        return render_template("home.html")
+        if authenticated() == True:
+            return render_template("home.html")
+        else:
+            return redirect(url_for("auth_login"))
 
     # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)

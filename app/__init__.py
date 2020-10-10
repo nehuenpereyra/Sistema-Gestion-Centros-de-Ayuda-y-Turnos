@@ -5,11 +5,13 @@ from .db import set_db, delete_db
 from config.routes import set_routes
 from app.helpers.login import set_login, authenticated
 
+from flask_assets import Bundle, Environment
+
 def create_app(environment="development" ):
 
     # Configuración inicial de la app
     app = Flask(__name__)
-    
+
     # Carga de la configuración
     env = environ.get("FLASK_ENV", "development")
 
