@@ -1,14 +1,9 @@
-{% extends "layout.html" %}
-{% block title %}Usuarios{% endblock %}
-{% block head %}
-  {{ super() }}
+{% extends "unauthorized_layout.html" %}
+{% block sub_content %}
+<h1>usuarios</h1>
+{% for user in users %}
+<li>{{ user.get_email }} - {{ user.get_first_name }} - {{ user.get_last_name }}</li>
+{% endfor %}
+<a href="{{ url_for('index') }}" class="link">Volver</a>
+<a href="{{ url_for('user_new') }}" class="link">Nuevo</a>
 {% endblock %}
-{% block content %}
-  <h1>usuarios</h1>
-  {% for user in users %}
-  <li>{{ user.get_email }} - {{ user.get_first_name }} - {{ user.get_last_name }}</li>
-  {% endfor %}
-  <a href="{{ url_for('index') }}" class="link">Volver</a>
-  <a href="{{ url_for('user_new') }}" class="link">Nuevo</a>
-{% endblock %}
-
