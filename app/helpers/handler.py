@@ -23,4 +23,3 @@ def forbidden_error(e):
         "error_description": "No tienes permiso para esto",
     }
     return render_template("error.html", **kwargs), 403
-

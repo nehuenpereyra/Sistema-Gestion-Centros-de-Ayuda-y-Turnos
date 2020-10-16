@@ -1,5 +1,6 @@
 from os import environ
 
+
 class BaseConfig(object):
     """Base configuration."""
 
@@ -75,6 +76,7 @@ class UnitTestConfig(BaseConfig):
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+
 config = dict(
-    development=DevelopmentConfig, testing=TestingConfig, production=ProductionConfig, unittest= UnitTestConfig
+    development=DevelopmentConfig, testing=TestingConfig, production=ProductionConfig, unittest=UnitTestConfig
 )

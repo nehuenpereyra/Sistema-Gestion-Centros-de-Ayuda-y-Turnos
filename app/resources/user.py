@@ -1,14 +1,16 @@
-from flask import redirect, render_template, request, url_for, abort
-from app.models.user import User
-from app.helpers.forms.SignupForm import SignupForm
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, login_required
-from app.helpers.forms.UserSeekerForm import UserSeekerForm
 
-# Protected resources
+from flask import redirect, render_template, request, url_for, abort
+from flask_login import login_user, login_required
+
+from app.helpers.forms.SignupForm import SignupForm
+from app.helpers.forms.UserSeekerForm import UserSeekerForm
+from app.helpers.permission import permission
+from app.models.user import User
 
 
 @login_required
+@permission('user_index')
 def index(state=None, notification_state=None):
 
     search_form = UserSeekerForm(request.args)
@@ -27,11 +29,13 @@ def index(state=None, notification_state=None):
 
 
 @login_required
+@permission('user_create')
 def new():
     return render_template("user/new.html", form=SignupForm())
 
 
 @login_required
+@permission('user_create')
 def create():
     form = SignupForm()
     if form.validate_on_submit():
@@ -45,6 +49,7 @@ def create():
 
 
 @login_required
+@permission('user_delete')
 def delete(id):
     user = User.get_by_id(id)
     if user:

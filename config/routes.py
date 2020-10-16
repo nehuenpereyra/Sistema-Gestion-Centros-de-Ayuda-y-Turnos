@@ -1,10 +1,12 @@
 from flask import render_template
-from app.helpers import handler
+from flask import redirect, url_for
+from flask_login import current_user
+
 from app.resources import user
 from app.resources import auth
 from app.resources import configuration
+from app.helpers import handler
 from app.helpers.login import authenticated
-from flask import redirect, url_for
 
 
 def set_routes(app):
@@ -13,6 +15,8 @@ def set_routes(app):
     @app.route("/")
     def index():
         if authenticated() == True:
+            if current_user.roles[0].name == "Administrador":
+                return redirect(url_for("user_index"))
             return render_template("home.html")
         else:
             return redirect(url_for("auth_login"))
