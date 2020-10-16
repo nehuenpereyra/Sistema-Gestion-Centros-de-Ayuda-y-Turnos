@@ -9,8 +9,7 @@ from flask_login import login_user, login_required
 
 @login_required
 def index():
-    users = User.all()
-    return render_template("user/index.html", users=users)
+    return render_template("user/index.html", users=User.all())
 
 
 @login_required

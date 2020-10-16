@@ -1,20 +1,23 @@
+
 from app.db import db
 from sqlalchemy.ext.hybrid import hybrid_property
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 import random
+from app.models.user_role import UserRole, link_user_role
 
 
 class User(UserMixin, db.Model):
 
-    __tablename__ = 'users'
-
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(30), nullable=False)
-    last_name = db.Column(db.String(30), nullable=False)
-    email = db.Column(db.String(30), unique=True, nullable=False)
+    name = db.Column(db.String(32), nullable=False)
+    surname = db.Column(db.String(32), nullable=False)
+    email = db.Column(db.String(32), unique=True, nullable=False)
+    username = db.Column(db.String(32), nullable=False)
     password = db.Column(db.String(128), nullable=False)
-    username = db.Column(db.String(30), nullable=False)
+    roles = db.relationship(
+        "UserRole", secondary=link_user_role, back_populates="users")
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
 
     @hybrid_property
     def get_email(self):

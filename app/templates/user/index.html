@@ -1,9 +1,46 @@
 {% extends "unauthorized_layout.html" %}
 {% block sub_content %}
-<h1>usuarios</h1>
-{% for user in users %}
-<li>{{ user.get_email }} - {{ user.get_first_name }} - {{ user.get_last_name }}</li>
-{% endfor %}
-<a href="{{ url_for('index') }}" class="link">Volver</a>
-<a href="{{ url_for('user_new') }}" class="link">Nuevo</a>
+
+    <h4 class="mt-3">Usuarios</h4>
+    <div class="d-flex justify-content-end mt-3"><a class="btn btn-primary btn-sm flex-grow-1 flex-sm-grow-0 h-100" role="button" href="{{ url_for('user_new') }}"><i class="fas fa-user-plus"></i><span class="ml-2">Nuevo Usuario</span></a></div>
+    
+    <!-- <div class="shadow-sm mt-3">
+        <form class="border rounded p-2">
+            <div class="input-group">
+                <div class="input-group-prepend"><span class="input-group-text">Nombre</span></div><input class="form-control" type="text">
+                <div class="input-group-append d-none d-sm-inline"><button class="btn btn-primary" type="button">Buscar</button></div>
+            </div>
+            <div class="pt-2"><a href="#">Limpiar Filtros</a>
+                <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-1" name="activo"><label class="form-check-label" for="formCheck-1">Activos</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-1" name="activo"><label class="form-check-label" for="formCheck-1">Bloqueados</label></div>
+            </div>
+        </form>
+    </div> -->
+
+    {% if users %}
+        <ul class="list-group border rounded shadow-sm mt-3">
+            {% for user in users %}
+                <li class="list-group-item">
+                    <div class="row d-flex justify-content-between">
+                        <div class="col-12 col-sm-auto d-flex justify-content-center mb-1 mb-sm-0"><span>{{ user.get_name }}</span></div>
+                        <div class="col-12 col-sm-auto d-flex justify-content-center"><a class="btn btn-primary btn-sm mr-1" role="button" href="#"><i class="fas fa-user-edit"></i></a><a class="btn btn-danger btn-sm" role="button" href="#"><i class="far fa-trash-alt"></i></a></div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+
+    {% endif %}
+
+    <!-- <nav class="d-flex justify-content-center justify-content-sm-end mt-3">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+        </ul>
+    </nav> -->
+
 {% endblock %}
