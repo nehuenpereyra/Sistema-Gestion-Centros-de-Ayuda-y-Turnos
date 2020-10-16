@@ -20,14 +20,10 @@ def index(state=None, notification_state=None):
             query = query.filter_by(username=search_form.data_seeker.data)
 
         if (search_form.user_state.data):
-            if search_form.user_state.data == "active":
-                query = query.filter_by(is_active=True)
-            else:
-                query = query.filter_by(is_active=False)
+            active_user = search_form.user_state.data == "active"
+            query = query.filter_by(is_active=active_user)
 
-    users = query.all()
-
-    return render_template("user/index.html", users=users, search_form=search_form, state=state, notification_state=notification_state)
+    return render_template("user/index.html", users=query.all(), search_form=search_form, state=state, notification_state=notification_state)
 
 
 @login_required
