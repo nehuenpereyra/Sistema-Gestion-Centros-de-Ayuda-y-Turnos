@@ -31,7 +31,7 @@ class User(UserMixin, db.Model):
     def get_last_name(self):
         return self.last_name
 
-    @hybrid_property
+    # @hybrid_property
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
