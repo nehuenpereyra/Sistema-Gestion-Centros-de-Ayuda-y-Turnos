@@ -1,53 +1,60 @@
-{% extends "layout.html" %}
+{% extends "unauthorized_layout.html" %}
 
-{% macro input(field) %}
-    {{ field.label }}
-            {% if ( field.errors|length == 0) %}
-              {% if ( field.data == None) %}
-                  {{ field(class_="form-control") }}<br>
-              {% else %}
-                {{ field(class_="form-control is-valid") }}
-              {% endif %}  
-            {% else %}
-              {{ field(class_="form-control is-invalid") }}
-              {% for error in field.errors %}
-                <div class="invalid-feedback">{{ error }}</div>
-              {% endfor %}
-            {% endif %}
+{% macro input(field, placeholder) %}  
+  {% if ( field.errors|length == 0) %}
+    {{ field(class_="form-control form-control-user",placeholder=placeholder) }}
+  {% else %}
+    {{ field(class_="form-control form-control-user is-invalid",placeholder=placeholder) }}
+    {% for error in field.errors %}
+      <div class="invalid-feedback">{{ error }}</div>
+    {% endfor %}
+  {% endif %}
 {% endmacro %}
 
-{% block title %}Usuarios{% endblock %}
+{% block title %}Registrar Usuario{% endblock %}
 
 {% block head %}
   {{ super() }}
 {% endblock %}
 
-{% block content %}
-<div class="container">
-  <h1>Crear un usuario</h1>
-    <form action="{{ url_for('user_create') }}" method="post"  class="needs-validation" novalidate>
+
+
+{% block sub_content %}
+
+  <div class="p-5">
+    <div class="text-center">
+        <h4 class="text-dark mb-4">Registrar Usuario</h4>
+    </div>
+    <form class="user needs-validation" action="{{ url_for('user_create') }}" method="post">
         {{ form.hidden_tag() }}
-        <div>
-          {{input(form.username)}}
+        <div class="form-group row">
+            <div class="col-sm-6 mb-3 mb-sm-0">
+              {{ input(form.name, "Nombre") }}
+            </div>
+            <div class="col-sm-6">
+              {{input(form.surname, "Apellido")}}
+            </div>
         </div>
-        <div class="row">
-        <div class="form-group col-md-6">
-          {{input(form.first_name)}}
+        <div class="form-group">
+          {{input(form.email, "Correo Electrónico")}}
         </div>
-        <div class="form-group col-md-6">
-          {{input(form.last_name)}}
+        <div class="form-group">
+          {{input(form.username, "Nombre de Usuario")}}
         </div>
-        <div class="form-group col-md-6">
-          {{input(form.email)}}
+        <div class="form-group row">
+            <div class="col-sm-6 mb-3 mb-sm-0">
+              {{input(form.password, "Contraseña")}}
+            </div>
+            <div class="col-sm-6">
+              <input class="form-control form-control-user" type="password" id="exampleRepeatPasswordInput" placeholder="Repetir Contraseña" name="password_repeat">
+            </div>
         </div>
-        <div class="form-group col-md-6">
-            {{input(form.password)}}
+        <div class="form-group">
+          {{form.roles(class_="form-control", style="overflow: hidden")}}
         </div>
-        <p>
-            {{ form.submit(class_="btn btn-primary") }}
-            <button type="reset" class="btn btn-primary">Limpiar</button>
-        </p>
-  </form>
-</div>
-  <a href="{{ url_for('user_index') }}" class="link">Volver</a>
+        
+        {{ form.submit(class_="btn btn-primary btn-block text-white btn-user") }}
+        </form>
+  </div>
+
 {% endblock %}
