@@ -4,8 +4,10 @@ from config.config import config
 from .db import set_db, delete_db
 from config.routes import set_routes
 from app.helpers.login import set_login, authenticated
+from app.helpers.pagination import url_for_page
 
-def create_app(environment="development" ):
+
+def create_app(environment="development"):
 
     # Configuración inicial de la app
     app = Flask(__name__)
@@ -20,15 +22,17 @@ def create_app(environment="development" ):
 
     # Establece la db que posee la app
     set_db(app)
-   
+
     # Funciones que se exportan al contexto de Jinja2
     app.jinja_env.globals.update(is_authenticated=authenticated)
+    app.jinja_env.globals.update(url_for_page=url_for_page)
 
     # Establece las rutas que posee la app
     set_routes(app)
 
     # Retornar la instancia de app configurada
     return app
+
 
 def delete_app(app):
     delete_db(app)

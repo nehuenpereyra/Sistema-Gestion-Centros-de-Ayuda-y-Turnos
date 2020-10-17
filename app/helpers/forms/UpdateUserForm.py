@@ -23,4 +23,4 @@ class UpdateUserForm(UserForm):
     password = PasswordField('Contraseña',
                              validators=[length_or_empty(min=6, max=20)])
 
-    is_active = BooleanField("Activo")
+    is_active = BooleanField("Activo", default=True)

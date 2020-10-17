@@ -62,3 +62,9 @@ class User(UserMixin, db.Model):
         if self.id:
             db.session.delete(self)
             db.session.commit()
+
+    def has_role(self, role):
+        for each in self.roles:
+            if each.name == role:
+                return True
+        return False
