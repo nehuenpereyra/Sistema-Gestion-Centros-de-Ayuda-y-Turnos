@@ -18,6 +18,7 @@ class InitialSeeder(Seeder):
                            UserPermission(name="configuration_update"),
                            UserPermission(name="user_index"),
                            UserPermission(name="user_create"),
+                           UserPermission(name="user_update"),
                            UserPermission(name="user_delete")])
             UserRole(name="Operador").save()
             User(name="admin", surname="admin", email="admin@admin.com",

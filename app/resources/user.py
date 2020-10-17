@@ -5,14 +5,17 @@ from flask_login import login_user, login_required
 
 from app.helpers.forms.SignupForm import SignupForm
 from app.helpers.forms.UserSeekerForm import UserSeekerForm
+from app.helpers.forms.UpdateUserForm import UpdateUserForm
 from app.helpers.permission import permission
+from app.helpers.alert import add_alert, get_alert
 from app.models.user import User
+from app.models.alert import Alert
 from app.models.configuration import Configuration
 
 
 @login_required
 @permission('user_index')
-def index(state=None, notification_state=None):
+def index():
 
     search_form = UserSeekerForm(request.args)
     query = User.query
@@ -31,7 +34,7 @@ def index(state=None, notification_state=None):
 
     users = query.paginate(page=page, per_page=per_page, error_out=False)
 
-    return render_template("user/index.html", users=users, search_form=search_form, state=state, notification_state=notification_state)
+    return render_template("user/index.html", users=users, search_form=search_form, alert=get_alert())
 
 
 @login_required
@@ -46,6 +49,7 @@ def edit(id):
     user = User.query.get(id)
 
     if not user:
+        add_alert(Alert("danger", "El usuario no existe."))
         return redirect(url_for("user_index"))
 
     return render_template("user/edit.html", user_id=id, update_form=UpdateUserForm(obj=user))
@@ -62,8 +66,8 @@ def update(id):
     user = User.query.get(id)
 
     if not user:
-        # luego, se deberia mostrar un mensaje de error
-        return redirect(url_for("index"))
+        add_alert(Alert("danger", "El usuario no existe."))
+        return redirect(url_for("user_index"))
 
     user.name = update_form.name.data
     user.surname = update_form.surname.data
@@ -76,6 +80,8 @@ def update(id):
         user.set_password(update_form.password.data)
 
     user.save()
+    add_alert(
+        Alert("success", f"El usuario {user.username} se actualizo correctamente."))
 
     return redirect(url_for("user_index"))
 
@@ -99,6 +105,12 @@ def create():
 @permission('user_delete')
 def delete(id):
     user = User.get_by_id(id)
+
     if user:
         user.delete()
-    return redirect(url_for("user_index", state="success", notification_state=f"El usuario {user.username} fue eliminado con exito"))
+        add_alert(
+            Alert("success", f"El usuario {user.username} se borro con exito."))
+    else:
+        add_alert(Alert("danger", "El usuario no existe."))
+
+    return redirect(url_for("user_index"))
