@@ -6,6 +6,8 @@ from app.helpers.forms.SignupForm import SignupForm
 from app.helpers.forms.UpdateUserForm import UpdateUserForm
 from app.helpers.forms.UserSeekerForm import UserSeekerForm
 
+from app.models.configuration import Configuration
+
 # Protected resources
 
 
@@ -24,7 +26,12 @@ def index(state=None, notification_state=None):
             active_user = search_form.user_state.data == "active"
             query = query.filter_by(is_active=active_user)
 
-    return render_template("user/index.html", users=query.all(), search_form=search_form, state=state, notification_state=notification_state)
+    page = int(request.args.get('page', 1))
+    per_page = Configuration.query.first().pagination_elements
+
+    users = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    return render_template("user/index.html", users=users, search_form=search_form, state=state, notification_state=notification_state)
 
 
 @login_required
