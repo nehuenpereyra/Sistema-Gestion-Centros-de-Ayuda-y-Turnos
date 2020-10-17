@@ -12,7 +12,6 @@ class InitialSeeder(Seeder):
 
     # Inicializa las tablas del sistema
     def run(self):
-
         if User.find_by_email("admin@admin.com") == None:
             rol = UserRole(name="Administrador", permissions=[
                            UserPermission(name="configuration_update"),

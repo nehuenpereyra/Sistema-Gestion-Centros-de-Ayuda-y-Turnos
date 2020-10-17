@@ -10,6 +10,11 @@ from app.helpers.login import authenticated
 
 
 def set_routes(app):
+    """Configure application paths
+
+    Keyword arguments:
+    app -- application to which the routes will be added
+    """
 
     # Ruta para el Home (usando decorator)
     @app.route("/")

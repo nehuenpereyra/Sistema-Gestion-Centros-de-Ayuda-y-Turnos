@@ -1,4 +1,3 @@
-
 from wtforms import PasswordField
 from wtforms.validators import DataRequired, Length
 

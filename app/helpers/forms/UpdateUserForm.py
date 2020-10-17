@@ -6,6 +6,12 @@ from app.helpers.forms.UserForm import UserForm
 
 
 def length_or_empty(min, max):
+    """This validator returns true if the field is empty or has between min and max characters, otherwise it throws an exception.
+
+    Keyword arguments:
+    real -- minimum number of characters
+    imag -- maximum number of characters
+    """
 
     def _length_or_empty(form, field):
 

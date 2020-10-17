@@ -8,6 +8,11 @@ seeder = FlaskSeeder()  # Se crea un objeto de tipo FlaskSeeder
 
 
 def set_db(app):
+    """Configure the application database
+
+    Keyword arguments:
+    app -- application to which the database will be configured
+    """
     # Configura la base de datos
     db.init_app(app)
     migrate.init_app(app, db)  # Se inicializa el objeto migrate

@@ -1,8 +1,10 @@
 from os import path, environ
-from flask import Flask, g
+
+from flask import Flask
 from flask_session import Session
+
+from app.db import set_db
 from config.config import config
-from .db import set_db
 from config.routes import set_routes
 from app.helpers.login import set_login, authenticated
 from app.helpers.permission import verify_permission

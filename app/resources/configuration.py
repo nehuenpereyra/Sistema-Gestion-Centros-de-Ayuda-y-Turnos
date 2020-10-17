@@ -1,10 +1,10 @@
 from flask import redirect, render_template, request, url_for, abort
 from flask_login import login_required
 
-from app.models.configuration import Configuration
 from app.helpers.permission import permission
 from app.helpers.forms.ConfigurationForm import ConfigurationForm
 from app.helpers.alert import add_alert
+from app.models.configuration import Configuration
 from app.models.alert import Alert
 
 

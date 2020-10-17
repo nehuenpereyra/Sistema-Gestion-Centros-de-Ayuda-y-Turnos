@@ -1,6 +1,6 @@
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from app.db import db
-from sqlalchemy.ext.hybrid import hybrid_property
 from app.models.user_permission import UserPermission, link_role_permission
 
 link_user_role = db.Table("link_user_role",

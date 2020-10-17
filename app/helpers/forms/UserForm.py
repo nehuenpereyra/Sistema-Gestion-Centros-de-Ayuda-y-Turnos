@@ -10,6 +10,12 @@ from app.models.user_role import UserRole
 
 
 def unique(class_, query_filter):
+    """Returns true if there is no object with the same attribute in the database, otherwise it throws an exception.
+
+    Keyword arguments:
+    class_ -- class that will perform the query
+    query_filter -- filter used to perform the query
+    """
 
     def _unique(form, field):
 

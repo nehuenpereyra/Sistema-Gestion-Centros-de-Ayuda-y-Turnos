@@ -1,4 +1,3 @@
-
 class Alert():
 
     def __init__(self, state, message):

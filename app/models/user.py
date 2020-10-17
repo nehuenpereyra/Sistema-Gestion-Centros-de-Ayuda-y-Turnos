@@ -1,9 +1,8 @@
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from app.db import db
-from sqlalchemy.ext.hybrid import hybrid_property
-from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
-import random
 from app.models.user_role import UserRole, link_user_role
 
 

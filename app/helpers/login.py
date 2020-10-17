@@ -1,8 +1,8 @@
 from flask_login import LoginManager, current_user
+
 from app.models.user import User
 
 login_manager = LoginManager()
-# login_manager.session_protection = "strong"
 
 
 def set_login(app):
@@ -11,6 +11,11 @@ def set_login(app):
 
 @login_manager.user_loader
 def load_user(user_id):
+    """Callback used by the flask login library to load a user
+
+    Keyword arguments:
+    user_id -- id of the user to load
+    """
     return User.get_by_id(user_id)
 
 
