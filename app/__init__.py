@@ -1,5 +1,6 @@
 from os import path, environ
 from flask import Flask, g
+from flask_session import Session
 from config.config import config
 from .db import set_db
 from config.routes import set_routes
@@ -12,6 +13,10 @@ def create_app(environment="development"):
 
     # Configuración inicial de la app
     app = Flask(__name__)
+
+    # Agrega el manejo se seciones
+    app.config["SESSION_TYPE"] = "filesystem"
+    Session(app)
 
     # Carga de la configuración
     env = environ.get("FLASK_ENV", "development")

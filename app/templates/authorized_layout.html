@@ -22,11 +22,15 @@
         </nav>
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
-                <div class="container-fluid">
+                <div class="container">
                     {% block sub_content %}{% endblock %}
                 </div>
             </div>
         </div>
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
 {% endblock %}
