@@ -17,10 +17,11 @@ def index(state=None, notification_state=None):
     search_form = UserSeekerForm(request.args)
     query = User.query
 
-    if (search_form.data_seeker.data or search_form.user_state.data):
+    if (search_form.search_query.data or search_form.user_state.data):
 
-        if (search_form.data_seeker.data):
-            query = query.filter_by(username=search_form.data_seeker.data)
+        if (search_form.search_query.data):
+            query = query.filter(User.username.like(
+                f"%{search_form.search_query.data}%"))
 
         if (search_form.user_state.data):
             active_user = search_form.user_state.data == "active"
@@ -48,7 +49,7 @@ def edit(id):
     if not user:
         return redirect(url_for("user_index"))
 
-    return render_template("user/edit.html", user_id=id, update_form=UpdateUserForm(obj=user))
+    return render_template("user/edit.html", user_id=id, is_admin=user.has_role("Administrador"), update_form=UpdateUserForm(obj=user))
 
 
 @login_required

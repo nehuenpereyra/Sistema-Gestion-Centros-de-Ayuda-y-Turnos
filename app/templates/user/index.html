@@ -13,11 +13,11 @@
     <div class="shadow-sm mt-3">
         <form action="{{url_for('user_index')}}" method="GET" class="border rounded p-2">
             <div class="input-group">
-                <div class="input-group-prepend"><span class="input-group-text">Usuario</span></div>{{search_form.data_seeker(class_="form-control")}}
+                <div class="input-group-prepend"><span class="input-group-text">Usuario</span></div>{{search_form.search_query(class_="form-control")}}
                 <div class="input-group-append d-none d-sm-inline">{{search_form.submit(class_="btn btn-primary")}}</div>
             </div>
             <div class="pt-2">
-                <a href="#">Limpiar Filtros</a>
+                <button type="reset" class="btn btn-link p-1" style="text-decoration: none">Limpiar Filtros</button>
                 {% for field in search_form.user_state %}
                     <div class="form-check">
                         {{field(class_="form-check-input")}}
@@ -28,21 +28,36 @@
         </form>
     </div>
 
-    
 
     {% if users.items %}
         <ul class="list-group border rounded shadow-sm mt-3">
             {% for user in users.items %}
                 <li class="list-group-item">
-                    <div class="row d-flex justify-content-between">
-                        <div class="col-12 col-sm-auto d-flex justify-content-center mb-1 mb-sm-0"><span>{{ "{}".format(user.username) }}</span></div>
-                        <div class="col-12 col-sm-auto d-flex justify-content-center"><a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('user_edit', id=user.id) }}"><i class="fas fa-user-edit"></i></a><form action="{{url_for('user_delete', id=user.id)}}" method="POST"><button class="btn btn-danger btn-sm" type="submit"><i class="far fa-trash-alt"></i></button></form></div>
+                    <div class="row d-flex">
+                        <div class="col-12 d-flex justify-content-center justify-content-sm-start col-sm mb-2 mb-sm-0">
+                            <div class="text-center text-sm-left">
+                                <span class="d-block">{{ user.name }} {{ user.surname }}</span>
+                                <small>{{ user.email }}</small>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-auto d-flex justify-content-center align-items-center mb-2 mb-sm-0">
+                            {% if not user.is_active %}
+                                <i class="fas fa-user-lock text-danger mr-3"></i>
+                            {% endif %}
+                            <span class="d-block">{{ user.username }}</span>
+                        </div>
+                        <div class="col-12 col-sm-auto d-flex justify-content-center align-items-center">
+                            <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('user_edit', id=user.id) }}">
+                                <i class="fas fa-user-edit"></i>
+                            </a>
+                            <a class="btn btn-danger btn-sm" role="button" href="{{ url_for('user_delete', id=user.id) }}">
+                                <i class="far fa-trash-alt"></i>
+                            </a>
+                        </div>
                     </div>
                 </li>
             {% endfor %}
         </ul>
-    {% else %}
-
     {% endif %}
 
     <nav class="d-flex justify-content-center justify-content-sm-end mt-3">
@@ -52,7 +67,7 @@
                 {% if page %}
                     {% if page != users.page %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('user_index', page=page) }}">{{ page }}</a>
+                            <a class="page-link" href="{{ url_for_page('user_index', page) }}">{{ page }}</a>
                         </li>
                     {% else %}
                         <li class="page-item active">
@@ -60,12 +75,13 @@
                         </li>
                     {% endif %}
                 {% else %}
-                    <span class=ellipsis>…</span>
+                    <li class="page-item">
+                        <span class="page-link">…</span>
+                    </li>
                 {% endif %}
             {%- endfor %}
             <!-- <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li> -->
         </ul>
-
     </nav>
 
 {% endblock %}

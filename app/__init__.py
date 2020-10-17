@@ -5,6 +5,7 @@ from .db import set_db
 from config.routes import set_routes
 from app.helpers.login import set_login, authenticated
 from app.helpers.permission import verify_permission
+from app.helpers.pagination import url_for_page
 
 
 def create_app(environment="development"):
@@ -25,6 +26,7 @@ def create_app(environment="development"):
     # Funciones que se exportan al contexto de Jinja2
     app.jinja_env.globals.update(is_authenticated=authenticated)
     app.jinja_env.globals.update(verify_permission=verify_permission)
+    app.jinja_env.globals.update(url_for_page=url_for_page)
 
     # Establece las rutas que posee la app
     set_routes(app)
