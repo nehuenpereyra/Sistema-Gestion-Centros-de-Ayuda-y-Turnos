@@ -30,13 +30,13 @@
 
     
 
-    {% if users %}
+    {% if users.items %}
         <ul class="list-group border rounded shadow-sm mt-3">
-            {% for user in users %}
+            {% for user in users.items %}
                 <li class="list-group-item">
                     <div class="row d-flex justify-content-between">
                         <div class="col-12 col-sm-auto d-flex justify-content-center mb-1 mb-sm-0"><span>{{ "{}".format(user.username) }}</span></div>
-                        <div class="col-12 col-sm-auto d-flex justify-content-center"><a class="btn btn-primary btn-sm mr-1" role="button" href="#"><i class="fas fa-user-edit"></i></a><form action="{{url_for('user_delete', id=user.id)}}" method="POST"><button class="btn btn-danger btn-sm" type="submit"><i class="far fa-trash-alt"></i></button></form></div>
+                        <div class="col-12 col-sm-auto d-flex justify-content-center"><a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('user_edit', id=user.id) }}"><i class="fas fa-user-edit"></i></a><form action="{{url_for('user_delete', id=user.id)}}" method="POST"><button class="btn btn-danger btn-sm" type="submit"><i class="far fa-trash-alt"></i></button></form></div>
                     </div>
                 </li>
             {% endfor %}
@@ -45,15 +45,27 @@
 
     {% endif %}
 
-    <!-- <nav class="d-flex justify-content-center justify-content-sm-end mt-3">
+    <nav class="d-flex justify-content-center justify-content-sm-end mt-3">
         <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">4</a></li>
-            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+            <!-- <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li> -->
+            {%- for page in users.iter_pages() %}
+                {% if page %}
+                    {% if page != users.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('user_index', page=page) }}">{{ page }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item active">
+                            <a class="page-link">{{ page }}</a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <span class=ellipsis>…</span>
+                {% endif %}
+            {%- endfor %}
+            <!-- <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li> -->
         </ul>
-    </nav> -->
+
+    </nav>
 
 {% endblock %}
