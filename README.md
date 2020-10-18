@@ -8,4 +8,4 @@ Nehuen Pereyra - 15926/1
 ### Usuario Administrador
 Correo: admin@admin.com
 
-Pass: admin1234
+Pass: admin123
