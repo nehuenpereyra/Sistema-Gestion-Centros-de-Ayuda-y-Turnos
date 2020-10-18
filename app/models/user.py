@@ -18,24 +18,45 @@ class User(UserMixin, db.Model):
         "UserRole", secondary=link_user_role, back_populates="users")
     is_active = db.Column(db.Boolean, nullable=False, default=True)
 
-    @hybrid_property
+    def has_role(self, role):
+        for each in self.roles:
+            if each.name == role:
+                return True
+        return False
+
+    @property
     def get_email(self):
         return self.email
 
-    @hybrid_property
-    def get_first_name(self):
-        return self.first_name
+    def set_email(self, value):
+        self.email = value
 
-    @hybrid_property
-    def get_last_name(self):
-        return self.last_name
+    @property
+    def get_name(self):
+        return self.name
 
-    # @hybrid_property
+    @property
+    def get_surname(self):
+        return self.surname
+
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+    def save(self):
+        if not self.id:
+            db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        if self.id:
+            db.session.delete(self)
+            db.session.commit()
+
+    def __repr__(self):
+        return f'<User {self.email}>'
 
     @staticmethod
     def all():
@@ -48,22 +69,3 @@ class User(UserMixin, db.Model):
     @staticmethod
     def find_by_email(email):
         return User.query.filter_by(email=email).first()
-
-    def __repr__(self):
-        return f'<User {self.email}>'
-
-    def save(self):
-        if not self.id:
-            db.session.add(self)
-        db.session.commit()
-
-    def delete(self):
-        if self.id:
-            db.session.delete(self)
-            db.session.commit()
-
-    def has_role(self, role):
-        for each in self.roles:
-            if each.name == role:
-                return True
-        return False

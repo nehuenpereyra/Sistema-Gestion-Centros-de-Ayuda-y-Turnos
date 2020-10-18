@@ -20,8 +20,8 @@ class InitialSeeder(Seeder):
                            UserPermission(name="user_update"),
                            UserPermission(name="user_delete")])
             UserRole(name="Operador").save()
-            User(name="admin", surname="admin", email="admin@admin.com",
-                 username="admin_root", password=generate_password_hash("123123"), roles=[rol]).save()
+            User(name="Juan", surname="Lopez", email="admin@admin.com",
+                 username="Juanchuz", password=generate_password_hash("admin123"), roles=[rol]).save()
             print("Se cargo correctamente el primer usuario administrador")
 
         if Configuration.query.filter(Configuration.query.exists()).scalar() == None:

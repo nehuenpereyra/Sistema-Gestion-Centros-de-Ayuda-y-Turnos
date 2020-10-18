@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask import redirect, render_template, request, url_for, abort
-from flask_login import login_user, login_required
+from flask_login import login_user, login_required, current_user
 
 from app.helpers.forms.SignupForm import SignupForm
 from app.helpers.forms.UserSeekerForm import UserSeekerForm
@@ -11,6 +11,11 @@ from app.helpers.alert import add_alert, get_alert
 from app.models.user import User
 from app.models.alert import Alert
 from app.models.configuration import Configuration
+
+
+@login_required
+def profile():
+    return render_template("user/profile.html", user=current_user)
 
 
 @login_required
@@ -42,6 +47,21 @@ def index():
 @permission('user_create')
 def new():
     return render_template("user/new.html", form=SignupForm())
+
+
+@login_required
+@permission('user_create')
+def create():
+    form = SignupForm()
+
+    if form.validate_on_submit():
+        User(username=form.username.data, email=form.email.data,
+             name=form.name.data, surname=form.surname.data,
+             password=generate_password_hash(form.password.data),
+             roles=form.roles.data).save()
+        return redirect(url_for("user_index"))
+
+    return render_template("user/new.html", form=form)
 
 
 @login_required
@@ -85,21 +105,6 @@ def update(id):
         Alert("success", f"El usuario {user.username} se actualizo correctamente."))
 
     return redirect(url_for("user_index"))
-
-
-@login_required
-@permission('user_create')
-def create():
-    form = SignupForm()
-
-    if form.validate_on_submit():
-        User(username=form.username.data, email=form.email.data,
-             name=form.name.data, surname=form.surname.data,
-             password=generate_password_hash(form.password.data),
-             roles=form.roles.data).save()
-        return redirect(url_for("user_index"))
-
-    return render_template("user/new.html", form=form)
 
 
 @login_required

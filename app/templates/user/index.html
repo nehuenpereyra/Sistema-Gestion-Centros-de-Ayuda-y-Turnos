@@ -22,7 +22,7 @@
                 <div class="input-group-append d-none d-sm-inline">{{search_form.submit(class_="btn btn-primary")}}</div>
             </div>
             <div class="pt-2">
-                <button type="reset" class="btn btn-link p-1" style="text-decoration: none">Limpiar Filtros</button>
+                <a href="javascript:clear_search_form()" style="text-decoration: none"> Limpiar Filtros </a> 
                 {% for field in search_form.user_state %}
                     <div class="form-check">
                         {{field(class_="form-check-input")}}
@@ -55,7 +55,7 @@
                             <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('user_edit', id=user.id) }}">
                                 <i class="fas fa-user-edit"></i>
                             </a>
-                            <a class="btn btn-danger btn-sm" role="button" href="{{ url_for('user_delete', id=user.id) }}">
+                            <a onclick="return confirm('¿Seguro que deseas eliminar a {{user.username}}?');" class="btn btn-danger btn-sm" role="button" href="{{ url_for('user_delete', id=user.id) }}">
                                 <i class="far fa-trash-alt"></i>
                             </a>
                         </div>
@@ -89,4 +89,10 @@
         </ul>
     </nav>
 
+{% endblock %}
+
+
+{% block scripts %}
+  {{ super() }}
+  <script type="text/javascript" src="{{ url_for('static', filename='js/clear_search_form.js') }}"></script>
 {% endblock %}

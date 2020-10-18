@@ -34,6 +34,7 @@ def set_routes(app):
     )
 
     # Rutas de Usuarios
+    app.add_url_rule("/usuario/perfil", "user_profile", user.profile)
     app.add_url_rule("/usuarios/", "user_index", user.index)
 
     app.add_url_rule("/usuario/nuevo", "user_new", user.new)
@@ -44,8 +45,7 @@ def set_routes(app):
     app.add_url_rule("/usuario/actualizar/<int:id>", "user_update", user.update,
                      methods=["POST"])
 
-    app.add_url_rule("/usuario/borrar/<int:id>", "user_delete",
-                     user.delete, methods=["POST"])
+    app.add_url_rule("/usuario/borrar/<int:id>", "user_delete", user.delete)
 
     # Rutas de Configuracion
     app.add_url_rule("/configuracion", "configuration_update",

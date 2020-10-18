@@ -30,7 +30,7 @@
               <span class="d-none d-lg-inline mr-2 text-gray-600 small">{{current_user.username}}</span>
               <img class="border rounded-circle img-profile" src="{{ url_for('static', filename='img/user.jpg') }}" style="height: 2rem; width: 2rem;"></a>
                 <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">
-                  <a class="dropdown-item" role="presentation" href="{{ url_for('user_index') }}">
+                  <a class="dropdown-item" role="presentation" href="{{ url_for('user_profile') }}">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Perfil</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" role="presentation" href="{{ url_for('auth_logout') }}">
