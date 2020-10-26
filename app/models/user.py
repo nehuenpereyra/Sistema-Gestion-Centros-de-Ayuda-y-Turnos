@@ -50,13 +50,49 @@ class User(UserMixin, db.Model):
             db.session.add(self)
         db.session.commit()
 
-    def delete(self):
+    def remove(self):
         if self.id:
             db.session.delete(self)
             db.session.commit()
 
     def __repr__(self):
         return f'<User {self.email}>'
+
+    @staticmethod
+    def update(id, name, surname, email, username, roles, is_active, password):
+        user = User.query.get(id)
+        if user:
+            user.name = name
+            user.surname = surname
+            user.email = email
+            user.username = username
+            user.roles = roles
+            user.is_active = is_active
+            if password:
+                user.set_password(password)
+            user.save()
+            return user
+        return None
+
+    @staticmethod
+    def delete(id):
+        user = User.query.get(id)
+        if user:
+            user.remove()
+            return user
+        return None
+
+    @staticmethod
+    def search(search_query, user_state, page, per_page):
+        query = User.query
+
+        if (search_query):
+            query = query.filter(User.username.like(f"%{search_query}%"))
+
+        if (user_state):
+            query = query.filter_by(is_active=user_state == "active")
+
+        return query.paginate(page=page, per_page=per_page, error_out=False)
 
     @staticmethod
     def all():

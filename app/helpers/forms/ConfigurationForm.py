@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, IntegerField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, Email, Length, NumberRange
 from wtforms.widgets import TextArea
 from wtforms.fields.html5 import EmailField
 
@@ -12,7 +12,7 @@ class ConfigurationForm(FlaskForm):
     contact_email = EmailField('Email de contacto', validators=[
         DataRequired(), Email(), Length(max=30)])
     pagination_elements = IntegerField(
-        'Numero de elementos en la paginación', validators=[DataRequired()])
+        'Numero de elementos en la paginación', validators=[DataRequired(), NumberRange(min=1)])
     enabled_site = BooleanField(
-        'Sitio habilitado', validators=[DataRequired()])
+        'Sitio habilitado', default=False)
     submit = SubmitField('Actualizar')

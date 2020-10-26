@@ -21,13 +21,8 @@ def edit():
 def update():
     form = ConfigurationForm()
     if form.validate_on_submit():
-        config = Configuration.query.all()[0]
-        config.title = form.title.data
-        config.description = form.description.data
-        config.contact_email = form.contact_email.data
-        config.pagination_elements = form.pagination_elements.data
-        config.enabled_site = form.enabled_site.data
-        config.save()
+        Configuration.update(title=form.title.data, description=form.description.data, contact_email=form.contact_email.data,
+                             pagination_elements=form.pagination_elements.data, enabled_site=form.enabled_site.data)
         add_alert(
             Alert("success", f"La configuración se actualizo correctamente."))
         return redirect(url_for("index"))

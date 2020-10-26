@@ -23,22 +23,11 @@ def profile():
 def index():
 
     search_form = UserSeekerForm(request.args)
-    query = User.query
 
-    if (search_form.search_query.data or search_form.user_state.data):
-
-        if (search_form.search_query.data):
-            query = query.filter(User.username.like(
-                f"%{search_form.search_query.data}%"))
-
-        if (search_form.user_state.data):
-            active_user = search_form.user_state.data == "active"
-            query = query.filter_by(is_active=active_user)
-
-    page = int(request.args.get('page', 1))
-    per_page = Configuration.query.first().pagination_elements
-
-    users = query.paginate(page=page, per_page=per_page, error_out=False)
+    users = User.search(search_query=search_form.search_query.data,
+                        user_state=search_form.user_state.data,
+                        page=int(request.args.get('page', 1)),
+                        per_page=Configuration.query.first().pagination_elements)
 
     return render_template("user/index.html", users=users, search_form=search_form, alert=get_alert())
 
@@ -84,23 +73,13 @@ def update(id):
     if not update_form.validate_on_submit():
         return render_template("user/edit.html", user_id=id, update_form=update_form)
 
-    user = User.query.get(id)
+    user = User.update(id, update_form.name.data, update_form.surname.data,
+                       update_form.email.data, update_form.username.data, update_form.roles.data, update_form.is_active.data, update_form.password.data)
 
     if not user:
         add_alert(Alert("danger", "El usuario no existe."))
         return redirect(url_for("user_index"))
 
-    user.name = update_form.name.data
-    user.surname = update_form.surname.data
-    user.email = update_form.email.data
-    user.username = update_form.username.data
-    user.roles = update_form.roles.data
-    user.is_active = update_form.is_active.data
-
-    if update_form.password.data:
-        user.set_password(update_form.password.data)
-
-    user.save()
     add_alert(
         Alert("success", f"El usuario {user.username} se actualizo correctamente."))
 
@@ -110,10 +89,8 @@ def update(id):
 @login_required
 @permission('user_delete')
 def delete(id):
-    user = User.get_by_id(id)
-
+    user = User.delete(id)
     if user:
-        user.delete()
         add_alert(
             Alert("success", f"El usuario {user.username} se borro con exito."))
     else:

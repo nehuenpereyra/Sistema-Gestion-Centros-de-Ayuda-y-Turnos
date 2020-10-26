@@ -22,3 +22,13 @@ class Configuration(db.Model):
         if not self.id:
             db.session.add(self)
         db.session.commit()
+
+    @staticmethod
+    def update(title, description, contact_email, pagination_elements, enabled_site):
+        config = Configuration.query.first()
+        config.title = title
+        config.description = description
+        config.contact_email = contact_email
+        config.pagination_elements = pagination_elements
+        config.enabled_site = enabled_site
+        config.save()
