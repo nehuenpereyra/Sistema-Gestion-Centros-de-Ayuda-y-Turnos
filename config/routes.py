@@ -3,6 +3,7 @@ from flask import redirect, url_for
 from flask_login import current_user
 
 from app.resources import user
+from app.resources import help_center
 from app.resources import auth
 from app.resources import configuration
 from app.helpers import handler
