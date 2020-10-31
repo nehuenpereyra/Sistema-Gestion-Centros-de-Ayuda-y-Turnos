@@ -1,6 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from sqlalchemy.ext.hybrid import hybrid_property
 
 from app.db import db
 from app.models.user_role import UserRole, link_user_role

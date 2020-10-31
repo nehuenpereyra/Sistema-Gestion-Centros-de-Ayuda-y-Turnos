@@ -21,6 +21,7 @@ class HelpCenter(db.Model):
     published = db.Column(db.Boolean, nullable=True,
                           unique=False, default=True)
     request_status = db.Column(db.Boolean, nullable=True, unique=False)
+    turns = db.relationship("Turn", back_populates="help_center")
 
     # queda pendiente:
     # protocolo de vista
