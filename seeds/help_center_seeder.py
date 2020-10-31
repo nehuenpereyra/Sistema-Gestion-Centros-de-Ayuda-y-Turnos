@@ -31,7 +31,7 @@ class HelpCenterSeeder(Seeder):
             opening_time=time(9),
             closing_time=time(16),
             center_type=food_center_type,
-            town_id=0,
+            town_id=25,
             web_url="https://arroz.centro.org",
             email="arroz@centro.org")
         food_center_1.save()
@@ -44,7 +44,7 @@ class HelpCenterSeeder(Seeder):
             opening_time=time(9),
             closing_time=time(16),
             center_type=food_center_type,
-            town_id=0,
+            town_id=1,
             web_url="https://papa.centro.org",
             email="papa@centro.org",
             request_status=True)
@@ -58,7 +58,7 @@ class HelpCenterSeeder(Seeder):
             opening_time=time(9),
             closing_time=time(16),
             center_type=clothing_center_type,
-            town_id=0,
+            town_id=25,
             web_url="https://camisa.centro.org",
             email="camisa@centro.org",
             request_status=False)
@@ -72,7 +72,7 @@ class HelpCenterSeeder(Seeder):
             opening_time=time(9),
             closing_time=time(16),
             center_type=blood_center_type,
-            town_id=0,
+            town_id=20,
             web_url="https://gota.centro.org",
             published=False,
             request_status=True)
