@@ -29,14 +29,12 @@ class HelpCenter(db.Model):
                           unique=False, default=True)
     request_status = db.Column(db.Boolean, nullable=True, unique=False)
     turns = db.relationship("Turn", back_populates="help_center")
-
-    view_protocol = db.Column(
-    has_view_protocol=db.Column(
+    has_view_protocol = db.Column(
         db.Boolean, nullable=False, unique=False, default=False)
-    view_protocol_file=None
-    view_protocol_updated=False
-    latitude=db.Column(db.Float, nullable=True, unique=False)
-    longitude=db.Column(db.Float, nullable=True, unique=False)
+    view_protocol_file = None
+    view_protocol_updated = False
+    latitude = db.Column(db.Float, nullable=True, unique=False)
+    longitude = db.Column(db.Float, nullable=True, unique=False)
 
     def save(self):
         if self.view_protocol_updated:
@@ -48,23 +46,23 @@ class HelpCenter(db.Model):
     @ property
     def town(self):
         if not self.town_object:
-            self.town_object=Town.get(self.town_id)
+            self.town_object = Town.get(self.town_id)
         return self.town_object
 
     @ town.setter
     def town(self, value):
-        self.town_id=value.id
-        self.town_object=value
+        self.town_id = value.id
+        self.town_object = value
 
     def set_view_protocol(self, file):
-        self.has_view_protocol=True
-        self.view_protocol_file=file
-        self.view_protocol_updated=True
+        self.has_view_protocol = True
+        self.view_protocol_file = file
+        self.view_protocol_updated = True
 
     def remove_view_protocol(self):
-        self.has_view_protocol=False
-        self.view_protocol_file=None
-        self.view_protocol_updated=True
+        self.has_view_protocol = False
+        self.view_protocol_file = None
+        self.view_protocol_updated = True
 
     def get_view_protocol_full_path(self):
         return f'{current_app.config["UPLOAD_FOLDER"]}/help_centers/{self.id}/{self.name} - Protocolo.pdf'
@@ -72,18 +70,18 @@ class HelpCenter(db.Model):
     def update_view_protocol(self):
 
         if self.has_view_protocol:
-            view_protocol_path=os.path.dirname(
+            view_protocol_path = os.path.dirname(
                 self.get_view_protocol_full_path())
 
             if not os.path.exists(view_protocol_path):
                 os.makedirs(view_protocol_path)
 
             self.view_protocol_file.save(self.get_view_protocol_full_path())
-            self.view_protocol_file=None
+            self.view_protocol_file = None
         else:
             os.remove(self.get_view_protocol_full_path())
 
-        self.view_protocol_updated=False
+        self.view_protocol_updated = False
 
-    view_protocol=property(
+    view_protocol = property(
         fget=None, fset=set_view_protocol, fdel=remove_view_protocol, doc=None)
