@@ -1,5 +1,6 @@
 
 import os
+import shutil
 
 from flask import current_app
 
@@ -40,9 +41,21 @@ class HelpCenter(db.Model):
     def save(self):
         if self.view_protocol_updated:
             self.update_view_protocol()
+
         if not self.id:
             db.session.add(self)
-        db.session.commit()
+            db.session.commit()
+            os.makedirs(self.get_upload_path())
+        else:
+            db.session.commit()
+
+    def remove(self):
+        if self.id:
+            shutil.rmtree(self.get_upload_path())
+
+            self.turns.do(lambda each: each.remove())
+            db.session.delete(self)
+            db.session.commit()
 
     @ property
     def town(self):
@@ -65,22 +78,19 @@ class HelpCenter(db.Model):
         self.view_protocol_file = None
         self.view_protocol_updated = True
 
-    def get_view_protocol_full_path(self):
-        return f'{current_app.config["UPLOAD_FOLDER"]}/help_centers/{self.id}/{self.name} - Protocolo.pdf'
+    def get_upload_path(self):
+        return f'{current_app.config["UPLOAD_FOLDER"]}/help_centers/{self.id}'
+
+    def get_view_protocol_path(self):
+        return os.path.join(self.get_upload_path(), f"{self.name} - Protocolo.pdf")
 
     def update_view_protocol(self):
 
         if self.has_view_protocol:
-            view_protocol_path = os.path.dirname(
-                self.get_view_protocol_full_path())
-
-            if not os.path.exists(view_protocol_path):
-                os.makedirs(view_protocol_path)
-
-            self.view_protocol_file.save(self.get_view_protocol_full_path())
+            self.view_protocol_file.save(self.get_view_protocol_path())
             self.view_protocol_file = None
         else:
-            os.remove(self.get_view_protocol_full_path())
+            os.remove(self.get_view_protocol_path())
 
         self.view_protocol_updated = False
 
@@ -93,3 +103,11 @@ class HelpCenter(db.Model):
                  email=email_donante,
                  donor_phone_number=telefono_donante,
                  day_hour=fecha).save()
+
+    @staticmethod
+    def delete(id):
+        center = HelpCenter.query.get(id)
+        if center:
+            center.remove()
+            return center
+        return None
