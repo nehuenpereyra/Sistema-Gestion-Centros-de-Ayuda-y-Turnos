@@ -35,6 +35,9 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(verify_permission=verify_permission)
     app.jinja_env.globals.update(url_for_page=url_for_page)
 
+    # Se agrega la ruta por defecto para subir archivos a la configuracion
+    app.config['UPLOAD_FOLDER'] = "app/static/uploads"
+
     # Se agrega la URL de la api de referencia a la configuracion
     app.config["REFERENCES_API_URL"] = "https://api-referencias.proyecto2020.linti.unlp.edu.ar"
 
