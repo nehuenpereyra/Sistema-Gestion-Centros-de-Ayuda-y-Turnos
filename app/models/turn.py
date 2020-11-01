@@ -1,8 +1,7 @@
 from datetime import datetime, date, time, timedelta
+from sqlalchemy import Date, cast, and_
 
 from app.db import db
-from app.models.help_center import HelpCenter
-from sqlalchemy import Date, cast, and_
 
 
 class Turn(db.Model):
@@ -49,10 +48,13 @@ class Turn(db.Model):
                                each2: each1 != each2.day_hour)
 
     @staticmethod
-    def reservation(center_id, email_donante, telefono_donante, hora_inicio, fecha):
-        if not Turn.all_reserved_date(center_id, fecha).any_satisfy(lambda each: each.day_hour.time() == hora_inicio):
-            Turn(help_center=HelpCenter.query.get(center_id),
-                 email=email_donante,
-                 donor_phone_number=telefono_donante,
-                 day_hour=fecha).save()
-        pass
+    def update(id, id_center, email, donor_phone_number, day_hour):
+        turn = Turn.query.get(id)
+        if turn:
+            turn.id_center = id_center
+            turn.email = email
+            turn.donor_phone_number = donor_phone_number
+            user.day_hour = day_hour
+            turn.save()
+            return turn
+        return None

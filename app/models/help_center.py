@@ -7,7 +7,7 @@ from app.db import db
 
 from app.models.help_center_type import HelpCenterType
 from app.models.town import Town
-#from app.models.turn import Turn
+from app.models.turn import Turn
 
 
 class HelpCenter(db.Model):
@@ -86,3 +86,10 @@ class HelpCenter(db.Model):
 
     view_protocol = property(
         fget=None, fset=set_view_protocol, fdel=remove_view_protocol, doc=None)
+
+    def reserve_turn(self, email_donante, telefono_donante, hora_inicio, fecha):
+        if not Turn.all_reserved_date(self.id, fecha).any_satisfy(lambda each: each.day_hour.time() == hora_inicio):
+            Turn(help_center=self,
+                 email=email_donante,
+                 donor_phone_number=telefono_donante,
+                 day_hour=fecha).save()

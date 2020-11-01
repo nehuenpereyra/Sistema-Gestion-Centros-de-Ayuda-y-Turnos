@@ -8,6 +8,7 @@ from app.resources import auth
 from app.resources import configuration
 from app.helpers import handler
 from app.helpers.login import authenticated
+from app.resources import turn
 
 
 def set_routes(app):
@@ -47,6 +48,15 @@ def set_routes(app):
                      methods=["POST"])
 
     app.add_url_rule("/usuario/borrar/<int:id>", "user_delete", user.delete)
+
+    # Rutas de Turno
+    app.add_url_rule("/centro/<int:id>/turno/nuevo", "turn_new", turn.new)
+    app.add_url_rule(
+        "/centro/<int:id>/turno/actualizar/<int:id_turn>", "turn_edit", turn.edit)
+    app.add_url_rule("/centro/<int:id>/turno/actualizar/<int:id_turn>", "turn_update", turn.update,
+                     methods=["POST"])
+    app.add_url_rule("/centro/<int:id>/turno/borrar/<int:id_turn>",
+                     "turn_delete", turn.delete)
 
     # Rutas de Configuracion
     app.add_url_rule("/configuracion", "configuration_update",
