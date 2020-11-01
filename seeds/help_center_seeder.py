@@ -4,6 +4,8 @@ from datetime import time
 from flask_seeder import Seeder
 
 from app.models.help_center import HelpCenter, HelpCenterType
+from app.models.turn import Turn
+from datetime import datetime
 
 
 class HelpCenterSeeder(Seeder):
@@ -33,7 +35,8 @@ class HelpCenterSeeder(Seeder):
             center_type=food_center_type,
             town_id=25,
             web_url="https://arroz.centro.org",
-            email="arroz@centro.org")
+            email="arroz@centro.org"
+        )
         food_center_1.save()
         print(f" - {food_center_1.name} OK")
 
@@ -47,7 +50,8 @@ class HelpCenterSeeder(Seeder):
             town_id=1,
             web_url="https://papa.centro.org",
             email="papa@centro.org",
-            request_status=True)
+            request_status=True
+        )
         food_center_2.save()
         print(f" - {food_center_2.name} OK")
 
@@ -78,3 +82,25 @@ class HelpCenterSeeder(Seeder):
             request_status=True)
         blood_center.save()
         print(f" - {blood_center.name} OK")
+
+        print("[TurnSeeder]")
+
+        turn_one = Turn(email="juan@gmail.com",
+                        day_hour=datetime.now(), donor_phone_number="2214053283", help_center=food_center_1)
+        turn_one.save()
+        print(f" - {turn_one.id} OK")
+
+        turn_two = Turn(email="ramiro@gmail.com",
+                        day_hour=datetime.now(), donor_phone_number="2214053283", help_center=food_center_1)
+        turn_two.save()
+        print(f" - {turn_two.id} OK")
+
+        turn_three = Turn(email="julieta@gmail.com",
+                          day_hour=datetime.now(), donor_phone_number="2214053283", help_center=food_center_2)
+        turn_three.save()
+        print(f" - {turn_three.id} OK")
+
+        turn_four = Turn(email="marcela@gmail.com",
+                         day_hour=datetime.now(), donor_phone_number="2214053283", help_center=clothing_center)
+        turn_four.save()
+        print(f" - {turn_four.id} OK")
