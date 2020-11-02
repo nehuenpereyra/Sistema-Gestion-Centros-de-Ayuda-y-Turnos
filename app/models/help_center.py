@@ -57,6 +57,15 @@ class HelpCenter(db.Model):
             db.session.delete(self)
             db.session.commit()
 
+    def is_in_pending_state(self):
+        return self.request_status == None
+
+    def is_in_rejected_state(self):
+        return self.request_status == False
+
+    def is_in_accepted_state(self):
+        return self.request_status
+
     @ property
     def town(self):
         if not self.town_object:
@@ -81,8 +90,11 @@ class HelpCenter(db.Model):
     def get_upload_path(self):
         return f'{current_app.config["UPLOAD_FOLDER"]}/help_centers/{self.id}'
 
+    def get_view_protocol_filename(self):
+        return f"{self.name} - Protocolo.pdf"
+
     def get_view_protocol_path(self):
-        return os.path.join(self.get_upload_path(), f"{self.name} - Protocolo.pdf")
+        return os.path.join(self.get_upload_path(), self.get_view_protocol_filename())
 
     def update_view_protocol(self):
 
@@ -114,3 +126,19 @@ class HelpCenter(db.Model):
 
     def has_turn(self, turn):
         return self.turns.includes(turn)
+
+    @staticmethod
+    def search(search_query, help_center_state, page, per_page):
+        query = HelpCenter.query
+
+        if search_query:
+            query = query.filter(HelpCenter.name.like(f"%{search_query}%"))
+
+        if help_center_state:
+            if help_center_state != "pending":
+                query = query.filter_by(
+                    request_status=help_center_state == "accepted")
+            else:
+                query = query.filter_by(request_status=None)
+
+        return query.paginate(page=page, per_page=per_page, error_out=False)

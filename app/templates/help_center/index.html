@@ -12,18 +12,18 @@
         {{ show_alert(alert) }}
     {% endif %}
     
-    <h4 class="mt-3">Usuarios</h4>
-    <div class="d-flex justify-content-end mt-3"><a class="btn btn-primary btn-sm flex-grow-1 flex-sm-grow-0 h-100" role="button" href="{{ url_for('user_new') }}"><i class="fas fa-user-plus"></i><span class="ml-2">Nuevo Usuario</span></a></div>
+    <h4 class="mt-3">Centros de Ayuda</h4>
+    <div class="d-flex justify-content-end mt-3"><a class="btn btn-primary btn-sm flex-grow-1 flex-sm-grow-0 h-100" role="button" href="{{ url_for('help_center_index') }}"><i class="fas fa-plus"></i><span class="ml-2">Nuevo Centro</span></a></div>
     
     <div class="shadow-sm mt-3">
-        <form action="{{url_for('user_index')}}" method="GET" class="border rounded p-2">
+        <form method="GET" class="border rounded p-2">
             <div class="input-group">
-                <div class="input-group-prepend"><span class="input-group-text">Usuario</span></div>{{search_form.search_query(class_="form-control")}}
+                <div class="input-group-prepend"><span class="input-group-text">Centro</span></div>{{search_form.search_query(class_="form-control")}}
                 <div class="input-group-append d-none d-sm-inline">{{search_form.submit(class_="btn btn-primary")}}</div>
             </div>
             <div class="pt-2">
-                <a href="javascript:clear_search_form(['search_query'], ['user_state'])" style="text-decoration: none"> Limpiar Filtros </a> 
-                {% for field in search_form.user_state %}
+                <a href="javascript:clear_search_form(['search_query'], ['help_center_state'])" style="text-decoration: none"> Limpiar Filtros </a> 
+                {% for field in search_form.help_center_state %}
                     <div class="form-check">
                         {{field(class_="form-check-input")}}
                         {{field.label(class_="form-check-label")}}
@@ -33,29 +33,36 @@
         </form>
     </div>
 
-
-    {% if users.items %}
+    {% if help_centers.items %}
         <ul class="list-group border rounded shadow-sm mt-3">
-            {% for user in users.items %}
+            {% for help_center in help_centers.items %}
                 <li class="list-group-item">
                     <div class="row d-flex">
                         <div class="col-12 d-flex justify-content-center justify-content-sm-start col-sm mb-2 mb-sm-0">
-                            <div class="text-center text-sm-left">
-                                <span class="d-block">{{ user.name }} {{ user.surname }}</span>
-                                <small>{{ user.email }}</small>
-                            </div>
+                            <div class="text-center text-sm-left"><span class="d-block">{{ help_center.name }}</span><small>{{ help_center.center_type.name }}<br></small><small>Municipio {{ help_center.town.name }}<br></small><small>{{ help_center.opening_time.strftime("%H:%Mhs") }} - {{ help_center.closing_time.strftime("%H:%Mhs") }}<br></small></div>
                         </div>
                         <div class="col-12 col-sm-auto d-flex justify-content-center align-items-center mb-2 mb-sm-0">
-                            {% if not user.is_active %}
-                                <i class="fas fa-user-lock text-danger mr-3"></i>
+                            {% if help_center.is_in_pending_state() %}
+                                <i class="far fa-bell text-warning mr-3"></i>
+                            {% elif help_center.is_in_rejected_state() %}
+                                <i class="fas fa-ban text-danger mr-3"></i>
                             {% endif %}
-                            <span class="d-block">{{ user.username }}</span>
+
+                            {% if not help_center.published %}
+                                <i class="fas fa-eye-slash text-danger mr-3"></i>
+                            {% endif %}
                         </div>
                         <div class="col-12 col-sm-auto d-flex justify-content-center align-items-center">
-                            <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('user_edit', id=user.id) }}">
-                                <i class="fas fa-user-edit"></i>
+                            <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('help_center_index', id=help_center.id) }}">
+                                <i class="far fa-address-book"></i>
                             </a>
-                            <a onclick="return confirm('¿Seguro que deseas eliminar a {{user.username}}?');" class="btn btn-danger btn-sm" role="button" href="{{ url_for('user_delete', id=user.id) }}">
+                            <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('help_center_show', id=help_center.id) }}">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('help_center_index', id=help_center.id) }}">
+                                <i class="fas fa-cog"></i>
+                            </a>
+                            <a onclick="return confirm('¿Seguro que deseas eliminar el centro de ayuda {{ help_center.name }}?');" class="btn btn-danger btn-sm" role="button" href="{{ url_for('help_center_delete', id=help_center.id) }}">
                                 <i class="far fa-trash-alt"></i>
                             </a>
                         </div>
@@ -68,11 +75,11 @@
     <nav class="d-flex justify-content-center justify-content-sm-end mt-3">
         <ul class="pagination">
             <!-- <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li> -->
-            {%- for page in users.iter_pages() %}
+            {%- for page in help_centers.iter_pages() %}
                 {% if page %}
-                    {% if page != users.page %}
+                    {% if page != help_centers.page %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for_page('user_index', page) }}">{{ page }}</a>
+                            <a class="page-link" href="{{ url_for_page('help_center_index', page) }}">{{ page }}</a>
                         </li>
                     {% else %}
                         <li class="page-item active">

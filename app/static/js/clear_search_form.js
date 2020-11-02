@@ -1,5 +1,7 @@
-function clear_search_form() {
-  document.getElementById("user_state-0").checked = false;
-  document.getElementById("user_state-1").checked = false;
-  document.getElementById("search_query").value = "";
+function clear_search_form(textsFieldId, checkboxsFieldName) {
+    textsFieldId.forEach(each => document.getElementById(each).value = "");
+    checkboxsFieldName
+        .forEach(checkboxFieldName => document.getElementsByName(checkboxFieldName)
+            .forEach(checkbox => checkbox.checked = false));
+        
 }
