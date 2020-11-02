@@ -8,6 +8,7 @@ from app.resources import auth
 from app.resources import configuration
 from app.helpers import handler
 from app.helpers.login import authenticated
+from app.resources import help_center
 from app.resources import turn
 
 
@@ -48,6 +49,13 @@ def set_routes(app):
                      methods=["POST"])
 
     app.add_url_rule("/usuario/borrar/<int:id>", "user_delete", user.delete)
+
+    # Rutas de centros de ayuda
+    app.add_url_rule("/centros", "help_center_index", help_center.index)
+    app.add_url_rule("/centro/ver/<int:id>",
+                     "help_center_show", help_center.show)
+    app.add_url_rule("/centro/borrar/<int:id>",
+                     "help_center_delete", help_center.delete)
 
     # Rutas de Turno
     app.add_url_rule("/centro/<int:id>/turno/nuevo", "turn_new", turn.new)

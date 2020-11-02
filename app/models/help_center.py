@@ -81,8 +81,11 @@ class HelpCenter(db.Model):
     def get_upload_path(self):
         return f'{current_app.config["UPLOAD_FOLDER"]}/help_centers/{self.id}'
 
+    def get_view_protocol_filename(self):
+        return f"{self.name} - Protocolo.pdf"
+
     def get_view_protocol_path(self):
-        return os.path.join(self.get_upload_path(), f"{self.name} - Protocolo.pdf")
+        return os.path.join(self.get_upload_path(), self.get_view_protocol_filename())
 
     def update_view_protocol(self):
 
