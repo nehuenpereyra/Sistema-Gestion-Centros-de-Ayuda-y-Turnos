@@ -10,6 +10,10 @@ from datetime import datetime
 
 class HelpCenterSeeder(Seeder):
 
+    def __init__(self, db=None):
+        super().__init__(db=db)
+        self.priority = 1
+
     def run(self):
 
         print("[HelpCenterSeeder]")
