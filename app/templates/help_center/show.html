@@ -1,3 +1,4 @@
+{% from 'macros/alert.html' import  show_alert %}
 {% extends "authorized_layout.html" %}
 
 {% macro show_field(field, true_message=field, false_message=None, none_message=None) %}
@@ -23,7 +24,20 @@
 
 {% block sub_content %}
 
+    {% if alert %}
+        {{ show_alert(alert) }}
+    {% endif %}
+
     <h4 class="mt-3">Información de Centro</h4>
+    {% if help_center.is_in_pending_state() %}
+    <div class="d-flex justify-content-end mt-3">
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <a class="btn btn-sm btn-outline-danger" href="{{ url_for('help_center_reject', id=help_center.id) }}">Rechazar</a>
+            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('help_center_accept', id=help_center.id) }}">Aceptar</a>
+        </div>
+    </div>
+    {% endif %}
+
     <ul class="list-group shadow-sm my-4 mx-2">
         <li class="list-group-item">
             <h6 class="mb-0">Nombre</h6><small class="ml-2">{{ help_center.name }}</small></li>

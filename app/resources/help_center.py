@@ -33,7 +33,7 @@ def show(id):
         add_alert(Alert("danger", "El centro de ayuda no existe."))
         return redirect(url_for("help_center_index"))
 
-    return render_template("help_center/show.html", help_center=help_center)
+    return render_template("help_center/show.html", help_center=help_center, alert=get_alert())
 
 
 @login_required
@@ -50,3 +50,61 @@ def delete(id):
 
     add_alert(alert)
     return redirect(url_for("help_center_index"))
+
+
+@login_required
+@permission('help_center_certify')
+def accept(id):
+    help_center = HelpCenter.query.get(id)
+
+    if not help_center:
+        add_alert(Alert("danger", "El centro de ayuda no existe"))
+        return redirect(url_for("help_center_index"))
+
+    if not help_center.is_in_pending_state():
+        add_alert(Alert(
+            "danger", f"El centro de ayuda se encuentra actualmente {help_center.request_status}"))
+        return redirect(url_for("help_center_show", id=id))
+
+    help_center.accept_request()
+    help_center.save()
+
+    add_alert(Alert("success", "El centro de ayuda fue aceptado con exito"))
+    return redirect(url_for("help_center_show", id=id))
+
+
+@login_required
+@permission('help_center_certify')
+def reject(id):
+    return "ok"
+
+
+@login_required
+@permission('help_center_certify')
+def certify(id, is_accepted):
+    help_center = HelpCenter.query.get(id)
+
+    if not help_center:
+        add_alert(Alert("danger", "El centro de ayuda no existe"))
+        return redirect(url_for("help_center_index"))
+
+    center_state_message = {
+        False: "rechazado",
+        True: "aceptado"
+    }
+
+    if not help_center.is_in_pending_state():
+        add_alert(Alert(
+            "danger", f"El centro de ayuda se encuentra actualmente {center_state_message[help_center.is_in_accepted_state()]}"))
+        return redirect(url_for("help_center_show", id=id))
+
+    if is_accepted:
+        help_center.accept_request()
+    else:
+        help_center.reject_request()
+
+    help_center.save()
+
+    add_alert(Alert(
+        "success", f"El centro de ayuda fue {center_state_message[is_accepted]} con exito"))
+    return redirect(url_for("help_center_show", id=id))

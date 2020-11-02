@@ -66,6 +66,12 @@ class HelpCenter(db.Model):
     def is_in_accepted_state(self):
         return self.request_status
 
+    def accept_request(self):
+        self.request_status = True
+
+    def reject_request(self):
+        self.request_status = False
+
     @ property
     def town(self):
         if not self.town_object:

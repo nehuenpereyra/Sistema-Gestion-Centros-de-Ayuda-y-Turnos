@@ -1,12 +1,6 @@
 {% from 'macros/alert.html' import  show_alert %}
 {% extends "authorized_layout.html" %}
 {% block sub_content %}
-
-    {% if state %}
-    <div class="alert alert-success mt-3" role="alert">
-        {{ notification_state }}
-    </div>
-    {% endif %}
     
     {% if alert %}
         {{ show_alert(alert) }}
@@ -42,14 +36,14 @@
                             <div class="text-center text-sm-left"><span class="d-block">{{ help_center.name }}</span><small>{{ help_center.center_type.name }}<br></small><small>Municipio {{ help_center.town.name }}<br></small><small>{{ help_center.opening_time.strftime("%H:%Mhs") }} - {{ help_center.closing_time.strftime("%H:%Mhs") }}<br></small></div>
                         </div>
                         <div class="col-12 col-sm-auto d-flex justify-content-center align-items-center mb-2 mb-sm-0">
+                            {% if not help_center.published %}
+                                <i class="fas fa-eye-slash text-danger mr-3"></i>
+                            {% endif %}
+                            
                             {% if help_center.is_in_pending_state() %}
                                 <i class="far fa-bell text-warning mr-3"></i>
                             {% elif help_center.is_in_rejected_state() %}
                                 <i class="fas fa-ban text-danger mr-3"></i>
-                            {% endif %}
-
-                            {% if not help_center.published %}
-                                <i class="fas fa-eye-slash text-danger mr-3"></i>
                             {% endif %}
                         </div>
                         <div class="col-12 col-sm-auto d-flex justify-content-center align-items-center">

@@ -56,6 +56,10 @@ def set_routes(app):
                      "help_center_show", help_center.show)
     app.add_url_rule("/centro/borrar/<int:id>",
                      "help_center_delete", help_center.delete)
+    app.add_url_rule("/centro/aceptar/<int:id>",
+                     "help_center_accept", help_center.certify, defaults={"is_accepted": True})
+    app.add_url_rule("/centro/rechazar/<int:id>",
+                     "help_center_reject", help_center.certify, defaults={"is_accepted": False})
 
     # Rutas de Turno
     app.add_url_rule("/centro/<int:id>/turno/nuevo", "turn_new", turn.new)
