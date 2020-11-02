@@ -111,3 +111,6 @@ class HelpCenter(db.Model):
             center.remove()
             return center
         return None
+
+    def has_turn(self, turn):
+        return self.turns.includes(turn)

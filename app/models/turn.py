@@ -54,7 +54,15 @@ class Turn(db.Model):
             turn.id_center = id_center
             turn.email = email
             turn.donor_phone_number = donor_phone_number
-            user.day_hour = day_hour
+            turn.day_hour = day_hour
             turn.save()
+            return turn
+        return None
+
+    @staticmethod
+    def delete(id):
+        turn = Turn.query.get(id)
+        if turn:
+            turn.remove()
             return turn
         return None

@@ -51,6 +51,8 @@ def set_routes(app):
 
     # Rutas de Turno
     app.add_url_rule("/centro/<int:id>/turno/nuevo", "turn_new", turn.new)
+    app.add_url_rule("/centro/<int:id>/turno/nuevo", "turn_create",
+                     turn.create, methods=["POST"])
     app.add_url_rule(
         "/centro/<int:id>/turno/actualizar/<int:id_turn>", "turn_edit", turn.edit)
     app.add_url_rule("/centro/<int:id>/turno/actualizar/<int:id_turn>", "turn_update", turn.update,
