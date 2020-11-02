@@ -4,6 +4,7 @@ from flask_login import login_required
 
 from app.helpers.permission import permission
 from app.helpers.alert import add_alert, get_alert
+from app.helpers.forms.HelpCenterSeekerForm import HelpCenterSeekerForm
 
 from app.models.alert import Alert
 from app.models.configuration import Configuration
@@ -13,12 +14,14 @@ from app.models.help_center import HelpCenter
 @login_required
 @permission('help_center_index')
 def index():
-    page = int(request.args.get('page', 1))
-    per_page = Configuration.query.first().pagination_elements
+    search_form = HelpCenterSeekerForm(request.args)
 
-    help_centers = HelpCenter.query.paginate(
-        page=page, per_page=per_page, error_out=False)
-    return render_template("help_center/index.html", help_centers=help_centers, alert=get_alert())
+    help_centers = HelpCenter.search(search_query=search_form.search_query.data,
+                                     help_center_state=search_form.help_center_state.data,
+                                     page=int(request.args.get('page', 1)),
+                                     per_page=Configuration.query.first().pagination_elements)
+
+    return render_template("help_center/index.html", help_centers=help_centers, search_form=search_form, alert=get_alert())
 
 
 @login_required

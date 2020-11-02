@@ -123,3 +123,19 @@ class HelpCenter(db.Model):
             center.remove()
             return center
         return None
+
+    @staticmethod
+    def search(search_query, help_center_state, page, per_page):
+        query = HelpCenter.query
+
+        if search_query:
+            query = query.filter(HelpCenter.name.like(f"%{search_query}%"))
+
+        if help_center_state:
+            if help_center_state != "pending":
+                query = query.filter_by(
+                    request_status=help_center_state == "accepted")
+            else:
+                query = query.filter_by(request_status=None)
+
+        return query.paginate(page=page, per_page=per_page, error_out=False)

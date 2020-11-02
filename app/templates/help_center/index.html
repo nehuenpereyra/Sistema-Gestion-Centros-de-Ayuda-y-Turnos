@@ -14,7 +14,24 @@
     
     <h4 class="mt-3">Centros de Ayuda</h4>
     <div class="d-flex justify-content-end mt-3"><a class="btn btn-primary btn-sm flex-grow-1 flex-sm-grow-0 h-100" role="button" href="{{ url_for('help_center_index') }}"><i class="fas fa-plus"></i><span class="ml-2">Nuevo Centro</span></a></div>
-    <!-- Aca va el buscador -->
+    
+    <div class="shadow-sm mt-3">
+        <form method="GET" class="border rounded p-2">
+            <div class="input-group">
+                <div class="input-group-prepend"><span class="input-group-text">Centro</span></div>{{search_form.search_query(class_="form-control")}}
+                <div class="input-group-append d-none d-sm-inline">{{search_form.submit(class_="btn btn-primary")}}</div>
+            </div>
+            <div class="pt-2">
+                <a href="javascript:clear_search_form(['search_query'], ['help_center_state'])" style="text-decoration: none"> Limpiar Filtros </a> 
+                {% for field in search_form.help_center_state %}
+                    <div class="form-check">
+                        {{field(class_="form-check-input")}}
+                        {{field.label(class_="form-check-label")}}
+                    </div>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
 
     {% if help_centers.items %}
         <ul class="list-group border rounded shadow-sm mt-3">
@@ -36,6 +53,9 @@
                             {% endif %}
                         </div>
                         <div class="col-12 col-sm-auto d-flex justify-content-center align-items-center">
+                            <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('help_center_index', id=help_center.id) }}">
+                                <i class="far fa-address-book"></i>
+                            </a>
                             <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('help_center_show', id=help_center.id) }}">
                                 <i class="fas fa-eye"></i>
                             </a>

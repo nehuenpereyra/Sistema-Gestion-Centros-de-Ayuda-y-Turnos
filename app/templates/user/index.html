@@ -22,7 +22,7 @@
                 <div class="input-group-append d-none d-sm-inline">{{search_form.submit(class_="btn btn-primary")}}</div>
             </div>
             <div class="pt-2">
-                <a href="javascript:clear_search_form()" style="text-decoration: none"> Limpiar Filtros </a> 
+                <a href="javascript:clear_search_form(['search_query'], ['user_state'])" style="text-decoration: none"> Limpiar Filtros </a> 
                 {% for field in search_form.user_state %}
                     <div class="form-check">
                         {{field(class_="form-check-input")}}
