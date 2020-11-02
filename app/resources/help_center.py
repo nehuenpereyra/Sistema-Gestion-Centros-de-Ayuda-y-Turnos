@@ -1,29 +1,24 @@
 
-from flask import url_for, redirect, render_template
+from flask import url_for, redirect, render_template, request
 from flask_login import login_required
 
 from app.helpers.permission import permission
 from app.helpers.alert import add_alert, get_alert
 
 from app.models.alert import Alert
+from app.models.configuration import Configuration
 from app.models.help_center import HelpCenter
-
-
-def index_view(each, result):
-    return f"""
-        {result}
-        <p>
-            {each.name}
-            - <a href="{url_for("help_center_show", id=each.id)}">Ver</a>
-            - <a href="{url_for("help_center_delete", id=each.id)}">Borrar</a>
-        </p>
-    """
 
 
 @login_required
 @permission('help_center_index')
 def index():
-    return HelpCenter.query.all().inject(index_view, "")
+    page = int(request.args.get('page', 1))
+    per_page = Configuration.query.first().pagination_elements
+
+    help_centers = HelpCenter.query.paginate(
+        page=page, per_page=per_page, error_out=False)
+    return render_template("help_center/index.html", help_centers=help_centers, alert=get_alert())
 
 
 @login_required

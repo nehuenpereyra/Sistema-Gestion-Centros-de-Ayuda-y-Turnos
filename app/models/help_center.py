@@ -57,6 +57,15 @@ class HelpCenter(db.Model):
             db.session.delete(self)
             db.session.commit()
 
+    def is_in_pending_state(self):
+        return self.request_status == None
+
+    def is_in_rejected_state(self):
+        return self.request_status == False
+
+    def is_in_accepted_state(self):
+        return self.request_status
+
     @ property
     def town(self):
         if not self.town_object:
