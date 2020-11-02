@@ -93,3 +93,6 @@ class HelpCenter(db.Model):
                  email=email_donante,
                  donor_phone_number=telefono_donante,
                  day_hour=fecha).save()
+
+    def has_turn(self, turn):
+        return self.turns.includes(turn)
