@@ -1,5 +1,6 @@
+import json
 from datetime import datetime, date, time, timedelta
-from sqlalchemy import Date, cast, and_
+from sqlalchemy import Date, Time, cast, and_
 
 from app.db import db
 
@@ -7,7 +8,7 @@ from app.db import db
 class Turn(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(32), unique=True, nullable=False)
+    email = db.Column(db.String(32), nullable=False)
     day_hour = db.Column(db.DateTime, nullable=False, unique=False)
     donor_phone_number = db.Column(db.String(16), nullable=False)
     help_center = db.relationship(
@@ -66,3 +67,34 @@ class Turn(db.Model):
             turn.remove()
             return turn
         return None
+
+    @staticmethod
+    def search(id_center, page, per_page):
+        query = Turn.query
+        query = query.filter(Turn.help_center_id == id_center)
+
+        return query.paginate(page=page, per_page=per_page, error_out=False)
+
+    @staticmethod
+    def all_free_time_json(id_center, search_date):
+        array_json = []
+        turns = Turn.all_free_time(id_center, search_date)
+        for turn in turns:
+            array_json.append({
+                'centro_id': str(id),
+                'horario_inicio': turn.strftime('%H:%M'),
+                'horario_fin': (turn + timedelta(minutes=30)).strftime('%H:%M'),
+                'fecha': turn.strftime('%Y/%m/%d')
+            })
+        return json.dumps({'turnos': array_json})
+
+    @staticmethod
+    def get_next_tuns(page, per_page):
+        query = Turn.query
+        today = datetime.today()
+        query = query.filter(cast(Turn.day_hour, Date).between(
+            today, today + timedelta(hours=48)))
+        query = query.order_by(
+            cast(Turn.day_hour, Date).asc(), cast(Turn.day_hour, Time).asc())
+
+        return query.paginate(page=page, per_page=per_page, error_out=False)

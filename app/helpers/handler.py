@@ -23,3 +23,19 @@ def forbidden_error(e):
         "error_description": "No tienes permiso para esto",
     }
     return render_template("error.html", **kwargs), 403
+
+
+def bad_request_error(e):
+    kwargs = {
+        "error_name": "400 One of the parameters specified in the request was invalid.",
+        "error_description": "Uno de los parámetros especificados en la solicitud no es válido.",
+    }
+    return render_template("error.html", **kwargs), 400
+
+
+def internal_server_error(e):
+    kwargs = {
+        "error_name": "500 Internal Server Error.",
+        "error_description": "Uno de los parámetros especificados en la solicitud no es válido.",
+    }
+    return render_template("error.html", **kwargs), 500

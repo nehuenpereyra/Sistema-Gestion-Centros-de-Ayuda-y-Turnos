@@ -20,7 +20,13 @@
 
 {% block sub_content %}
 
-    <h4 class="text-left mt-3">Editar turno</h4>
+    <h4 class="text-left mt-3"> 
+        {% if id_turn != None %}
+            Editar turno
+        {% else %}
+          Solicitar turno
+        {% endif %} 
+    </h4>
         <div class="shadow-sm mt-3 p-3">
             <form class="text-left user" action="{{ url_for('turn_edit', id=id_center , id_turn=id_turn) }}" method="post" id="new_form" >
                 {{ form.csrf_token }}
