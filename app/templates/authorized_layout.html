@@ -11,9 +11,13 @@
                     {% if verify_permission('user_index') %}
                         <li class="nav-item" role="presentation"><a class="nav-link active" href="{{ url_for('user_index') }}"><i class="fas fa-user"></i><span>Usuarios</span></a></li>
                     {% endif %}
+<<<<<<< HEAD
                     {% if verify_permission('help_center_index') %}
                         <li class="nav-item" role="presentation"><a class="nav-link active" href="{{ url_for('help_center_index') }}"><i class="fas fa-building"></i><span>Centros</span></a></li>
                     {% endif %}
+=======
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="{{ url_for('turn_index') }}"><i class="far fa-calendar-check"></i><span>Turnos</span></a></li>
+>>>>>>> feature/nehuenpereyra
                     {% if verify_permission('configuration_update') %}
                         <li class="nav-item" role="presentation"><a class="nav-link active" href="{{ url_for('configuration_edit') }}"><i class="fas fa-tools"></i><span>Configuración</span></a></li>
                     {% endif %}
