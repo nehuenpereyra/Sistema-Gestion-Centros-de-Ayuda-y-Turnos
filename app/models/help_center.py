@@ -14,7 +14,7 @@ from app.models.turn import Turn
 class HelpCenter(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(32), nullable=False, unique=False)
+    __name = db.Column("name", db.String(32), nullable=False, unique=False)
     address = db.Column(db.String(32), nullable=False, unique=False)
     phone_number = db.Column(db.String(16), nullable=False, unique=True)
     opening_time = db.Column(db.Time, nullable=False, unique=False)
@@ -38,16 +38,49 @@ class HelpCenter(db.Model):
     latitude = db.Column(db.Float, nullable=True, unique=False)
     longitude = db.Column(db.Float, nullable=True, unique=False)
 
-    def save(self):
-        if self.view_protocol_updated:
-            self.update_view_protocol()
+    def __init__(self, name, address, phone_number, opening_time, closing_time, center_type, town, web_url=None, email=None, published=True, request_status=None, view_protocol=None, latitude=None, longitude=None):
+        self.name = name
+        self.address = address
+        self.phone_number = phone_number
+        self.opening_time = opening_time
+        self.closing_time = closing_time
+        self.center_type = center_type
+        self.town = town
+        self.web_url = web_url
+        self.email = email
+        self.published = published
+        self.request_status = request_status
+        self.view_protocol = view_protocol
+        self.latitude = latitude
+        self.longitude = longitude
+        self.turns = []
 
+    def save(self):
         if not self.id:
             db.session.add(self)
             db.session.commit()
             os.makedirs(self.get_upload_path())
         else:
             db.session.commit()
+
+        if self.view_protocol_updated:
+            self.update_view_protocol()
+
+    # def update(self,
+    #     name=self.name,
+    #     address=self.address,
+    #     phone_number=self.phone_number,
+    #     opening_time=self.opening_time,
+    #     closing_time=self.closing_time,
+    #     center_type=self.center_type,
+    #     town=self.town,
+    #     web_url=self.web_url,
+    #     email=self.email,
+    #     published=self.published,
+    #     request_status=self.request_status,
+    #     view_protocol=self.view_protocol,
+    #     latitude=self.latitude,
+    #     longitude=self.longitude)
 
     def remove(self):
         if self.id:
@@ -72,6 +105,17 @@ class HelpCenter(db.Model):
     def reject_request(self):
         self.request_status = False
 
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, name):
+        old_view_protocol_path = self.get_view_protocol_path()
+        self.__name = name
+        if (os.path.exists(old_view_protocol_path)):
+            os.rename(old_view_protocol_path, self.get_view_protocol_path())
+
     @ property
     def town(self):
         if not self.town_object:
@@ -84,14 +128,10 @@ class HelpCenter(db.Model):
         self.town_object = value
 
     def set_view_protocol(self, file):
-        self.has_view_protocol = True
+        self.view_protocol_updated = bool(file) or (
+            self.has_view_protocol and not bool(file))
+        self.has_view_protocol = bool(file)
         self.view_protocol_file = file
-        self.view_protocol_updated = True
-
-    def remove_view_protocol(self):
-        self.has_view_protocol = False
-        self.view_protocol_file = None
-        self.view_protocol_updated = True
 
     def get_upload_path(self):
         return f'{current_app.config["UPLOAD_FOLDER"]}/help_centers/{self.id}'
@@ -113,7 +153,7 @@ class HelpCenter(db.Model):
         self.view_protocol_updated = False
 
     view_protocol = property(
-        fget=None, fset=set_view_protocol, fdel=remove_view_protocol, doc=None)
+        fget=None, fset=set_view_protocol, fdel=None, doc=None)
 
     def reserve_turn(self, email_donante, telefono_donante, hora_inicio, fecha):
         if not Turn.all_reserved_date(self.id, fecha).any_satisfy(lambda each: each.day_hour.time() == hora_inicio):
@@ -121,6 +161,10 @@ class HelpCenter(db.Model):
                  email=email_donante,
                  donor_phone_number=telefono_donante,
                  day_hour=fecha).save()
+
+    @staticmethod
+    def get(id):
+        return HelpCenter.query.get(id)
 
     @staticmethod
     def delete(id):
