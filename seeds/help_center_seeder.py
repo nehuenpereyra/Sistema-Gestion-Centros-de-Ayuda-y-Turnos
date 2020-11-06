@@ -4,6 +4,7 @@ from datetime import time
 from flask_seeder import Seeder
 
 from app.models.help_center import HelpCenter, HelpCenterType
+from app.models.town import Town
 from app.models.turn import Turn
 from datetime import datetime
 
@@ -37,7 +38,7 @@ class HelpCenterSeeder(Seeder):
             opening_time=time(9),
             closing_time=time(16),
             center_type=food_center_type,
-            town_id=25,
+            town=Town.get(25),
             web_url="https://arroz.centro.org",
             email="arroz@centro.org"
         )
@@ -51,7 +52,7 @@ class HelpCenterSeeder(Seeder):
             opening_time=time(9),
             closing_time=time(16),
             center_type=food_center_type,
-            town_id=1,
+            town=Town.get(1),
             web_url="https://papa.centro.org",
             email="papa@centro.org",
             request_status=True
@@ -66,7 +67,7 @@ class HelpCenterSeeder(Seeder):
             opening_time=time(9),
             closing_time=time(16),
             center_type=clothing_center_type,
-            town_id=25,
+            town=Town.get(25),
             web_url="https://camisa.centro.org",
             email="camisa@centro.org",
             request_status=False)
@@ -80,7 +81,7 @@ class HelpCenterSeeder(Seeder):
             opening_time=time(9),
             closing_time=time(16),
             center_type=blood_center_type,
-            town_id=20,
+            town=Town.get(20),
             web_url="https://gota.centro.org",
             published=False,
             request_status=True)
