@@ -15,7 +15,7 @@ import json
 
 
 @login_required
-@permission('user_index')
+@permission('turn_index')
 def index():
 
     turns = Turn.get_next_tuns(page=int(request.args.get('page', 1)),
@@ -28,7 +28,7 @@ def index():
 
 
 @login_required
-@permission('user_index')
+@permission('turn_index')
 def center_index(id):
 
     turns = Turn.search(id_center=id, page=int(request.args.get('page', 1)),
@@ -41,46 +41,46 @@ def center_index(id):
 
 
 @login_required
-@permission('user_create')
+@permission('turn_create')
 def new(id):
     return render_template("turn/new.html", center_id=id, form=TurnForm())
 
 
 @login_required
-@permission('user_create')
+@permission('turn_create')
 def create(id):
     form = TurnForm()
 
     center = HelpCenter.query.get(id)
     if not center:
         add_alert(Alert("danger", "El centro no existe."))
-        return redirect(url_for("user_index"))
+        return redirect(url_for("turn_center_index", id=id))
 
     if form.validate_on_submit():
         Turn(help_center=HelpCenter.query.get(id),
              email=form.email.data,
              donor_phone_number=form.donor_phone_number.data,
              day_hour=form.day_hour.data).save()
-        return redirect(url_for("user_index"))
+        return redirect(url_for("turn_center_index", id=id))
     print(form.email.data)
     print(form.day_hour.data)
     return render_template("turn/new.html", center_id=id, form=form)
 
 
 @login_required
-@permission('user_update')
+@permission('turn_update')
 def edit(id, id_turn):
     turn = Turn.query.get(id_turn)
 
     if not turn:
         add_alert(Alert("danger", "El turno no existe."))
-        return redirect(url_for("user_index"))
+        return redirect(url_for("turn_center_index", id=id))
 
     return render_template("turn/edit.html", id_center=id, id_turn=id_turn, form=TurnForm(obj=turn))
 
 
 @login_required
-@permission('user_update')
+@permission('turn_update')
 def update(id, id_turn):
     form = TurnForm()
 
@@ -92,21 +92,21 @@ def update(id, id_turn):
 
     if not form:
         add_alert(Alert("danger", "El turno no existe."))
-        return redirect(url_for("user_index"))
+        return redirect(url_for("turn_center_index", id=id))
 
     add_alert(
         Alert("success", f"El turno de {turn.email} se actualizo correctamente."))
 
-    return redirect(url_for("user_index"))
+    return redirect(url_for("turn_center_index", id=id))
 
 
 @login_required
-@permission('user_delete')
+@permission('turn_delete')
 def delete(id, id_turn):
     center = HelpCenter.query.get(id)
     if not center:
         add_alert(Alert("danger", "El centro no existe."))
-        return redirect(url_for("user_index"))
+        return redirect(url_for("turn_center_index", id=id))
 
     if center.has_turn(Turn.query.get(id_turn)):
         turn = Turn.delete(id_turn)
@@ -115,7 +115,7 @@ def delete(id, id_turn):
     else:
         add_alert(Alert("danger", "El turno no existe."))
 
-    return redirect(url_for("user_index"))
+    return redirect(url_for("turn_center_index", id=id))
 
 
 def free_time(id):
