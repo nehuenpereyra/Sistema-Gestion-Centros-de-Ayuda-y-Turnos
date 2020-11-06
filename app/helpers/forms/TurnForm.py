@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask_wtf import FlaskForm
+from .SpanishForm import SpanishForm
 from wtforms import SubmitField, IntegerField, StringField
 from wtforms.widgets import HiddenInput
 from wtforms.fields.html5 import EmailField, DateTimeLocalField
@@ -51,7 +51,7 @@ def time_invalid():
     return _time_invalid
 
 
-class TurnForm(FlaskForm):
+class TurnForm(SpanishForm):
 
     center_id = IntegerField(widget=HiddenInput(), default=0)
     email = EmailField('Correo Electrónico',

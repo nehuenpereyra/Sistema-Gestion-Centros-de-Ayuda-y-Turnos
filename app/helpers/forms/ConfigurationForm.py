@@ -1,11 +1,11 @@
-from flask_wtf import FlaskForm
+from .SpanishForm import SpanishForm
 from wtforms import StringField, SubmitField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, Email, Length, NumberRange
 from wtforms.widgets import TextArea
 from wtforms.fields.html5 import EmailField
 
 
-class ConfigurationForm(FlaskForm):
+class ConfigurationForm(SpanishForm):
     title = StringField('Titulo', validators=[DataRequired(), Length(max=30)])
     description = StringField('Descripción', validators=[
                               DataRequired(), Length(max=90)], widget=TextArea())

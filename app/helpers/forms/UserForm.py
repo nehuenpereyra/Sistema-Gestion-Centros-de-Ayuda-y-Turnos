@@ -1,4 +1,4 @@
-from flask_wtf import FlaskForm
+from .SpanishForm import SpanishForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, IntegerField
 from wtforms.widgets import HiddenInput
 from wtforms.fields.html5 import EmailField
@@ -29,7 +29,7 @@ def unique(class_, query_filter):
     return _unique
 
 
-class UserForm(FlaskForm):
+class UserForm(SpanishForm):
 
     id = IntegerField(widget=HiddenInput(), default=20)
     name = StringField('Nombre', validators=[DataRequired(), Length(max=20)])
