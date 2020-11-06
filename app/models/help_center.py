@@ -55,6 +55,18 @@ class HelpCenter(db.Model):
         self.longitude = longitude
         self.turns = []
 
+    def public_dict(self):
+        return {
+            "nombre": self.name,
+            "direccion": self.address,
+            "telefono": self.phone_number,
+            "hora_apertura": self.opening_time.strftime("%H:%M"),
+            "hora_cierre": self.closing_time.strftime("%H:%M"),
+            "tipo": self.center_type.name,
+            "web": self.web_url,
+            "email": self.email
+        }
+
     def save(self):
         if not self.id:
             db.session.add(self)
@@ -165,6 +177,11 @@ class HelpCenter(db.Model):
     @staticmethod
     def get(id):
         return HelpCenter.query.get(id)
+
+    @staticmethod
+    def all_published(page=1, per_page=None):
+        query = HelpCenter.query.filter_by(request_status=True, published=True)
+        return query.paginate(page=page, per_page=per_page, error_out=False).items, query.count()
 
     @staticmethod
     def delete(id):
