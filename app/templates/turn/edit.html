@@ -29,7 +29,9 @@
     </h4>
         <div class="shadow-sm mt-3 p-3">
             <form class="text-left user" action="{{ url_for('turn_edit', id=id_center , id_turn=id_turn) }}" method="post" id="new_form" >
-                {{ form.csrf_token }}
+              {{ form.hidden_tag() }}  
+              {{ form.csrf_token }}
+                {{ form.center_id(value=id_center) }}
                 <div class="form-group row">
                     <div class="col-sm-6 mb-3 mb-sm-0">
                         {{input(form.email, "Correo Electrónico")}}

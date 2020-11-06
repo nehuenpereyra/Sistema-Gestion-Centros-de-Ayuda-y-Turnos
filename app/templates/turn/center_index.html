@@ -30,9 +30,11 @@
                             <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('turn_edit',id=id_center , id_turn=turn.id) }}">
                                 <i class="fas fa-cog"></i>
                             </a>
-                            <a onclick="return confirm('¿Seguro que deseas eliminar a {{turn.email}}?');" class="btn btn-danger btn-sm" role="button" href="{{ url_for('turn_delete', id=id_center , id_turn=turn.id) }}">
-                                <i class="far fa-trash-alt"></i>
-                            </a>
+                            {% if verify_permission('turn_delete') %}
+                                <a onclick="return confirm('¿Seguro que deseas eliminar a {{turn.email}}?');" class="btn btn-danger btn-sm" role="button" href="{{ url_for('turn_delete', id=id_center , id_turn=turn.id) }}">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </li>

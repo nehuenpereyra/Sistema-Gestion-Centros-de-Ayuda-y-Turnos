@@ -14,7 +14,9 @@
                     {% if verify_permission('help_center_index') %}
                         <li class="nav-item" role="presentation"><a class="nav-link active" href="{{ url_for('help_center_index') }}"><i class="fas fa-building"></i><span>Centros</span></a></li>
                     {% endif %}
-                    <li class="nav-item" role="presentation"><a class="nav-link active" href="{{ url_for('turn_index') }}"><i class="far fa-calendar-check"></i><span>Turnos</span></a></li>
+                    {% if verify_permission('turn_index') %}
+                        <li class="nav-item" role="presentation"><a class="nav-link active" href="{{ url_for('turn_index') }}"><i class="far fa-calendar-check"></i><span>Turnos</span></a></li>
+                    {% endif %}
                     {% if verify_permission('configuration_update') %}
                         <li class="nav-item" role="presentation"><a class="nav-link active" href="{{ url_for('configuration_edit') }}"><i class="fas fa-tools"></i><span>Configuración</span></a></li>
                     {% endif %}

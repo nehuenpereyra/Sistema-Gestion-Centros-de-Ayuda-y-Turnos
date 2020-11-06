@@ -41,20 +41,23 @@ def new():
 @login_required
 @permission('user_create')
 def create():
-    form = SignupForm()
+    form = SignupForm(id=None)
 
     if form.validate_on_submit():
-        User(username=form.username.data, email=form.email.data,
-             name=form.name.data, surname=form.surname.data,
-             password=generate_password_hash(form.password.data),
-             roles=form.roles.data).save()
+        user = User(username=form.username.data, email=form.email.data,
+                    name=form.name.data, surname=form.surname.data,
+                    password=generate_password_hash(form.password.data),
+                    roles=form.roles.data)
+        user.save()
+        add_alert(
+            Alert("success", f"El usuario {user.username} se creo correctamente."))
         return redirect(url_for("user_index"))
 
     return render_template("user/new.html", form=form)
 
 
-@login_required
-@permission('user_update')
+@ login_required
+@ permission('user_update')
 def edit(id):
     user = User.query.get(id)
 
@@ -65,10 +68,10 @@ def edit(id):
     return render_template("user/edit.html", user_id=id, is_admin=user.has_role("Administrador"), update_form=UpdateUserForm(obj=user))
 
 
-@login_required
-@permission('user_update')
+@ login_required
+@ permission('user_update')
 def update(id):
-    update_form = UpdateUserForm()
+    update_form = UpdateUserForm(id=id)
 
     if not update_form.validate_on_submit():
         return render_template("user/edit.html", user_id=id, update_form=update_form)
@@ -86,8 +89,8 @@ def update(id):
     return redirect(url_for("user_index"))
 
 
-@login_required
-@permission('user_delete')
+@ login_required
+@ permission('user_delete')
 def delete(id):
     user = User.delete(id)
     if user:

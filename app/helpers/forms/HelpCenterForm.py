@@ -1,4 +1,4 @@
-
+import phonenumbers
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField, BooleanField, SelectField, IntegerField, FloatField
 from wtforms.widgets import HiddenInput
@@ -31,6 +31,18 @@ def unique(class_, query_filter):
     return _unique
 
 
+def valid_number():
+    def _valid_number(form, field):
+        message = f'No es un numero valido.'
+        try:
+            if not (phonenumbers.is_valid_number(phonenumbers.parse(field.data, "AR"))):
+                raise ValidationError(message)
+        except:
+            raise ValidationError(message)
+
+    return _valid_number
+
+
 class HelpCenterForm(FlaskForm):
 
     id = IntegerField(widget=HiddenInput())
@@ -38,7 +50,7 @@ class HelpCenterForm(FlaskForm):
     address = StringField("Dirección", validators=[
                           DataRequired(), Length(max=32)])
     phone_number = TelField("Teléfono", validators=[
-                            DataRequired(), unique(HelpCenter, "phone_number")])
+                            DataRequired(), unique(HelpCenter, "phone_number"), valid_number()])
     opening_time = TimeField("Hora de Apertura", validators=[DataRequired()])
     closing_time = TimeField("Hora de Cierre", validators=[DataRequired()])
 

@@ -10,21 +10,21 @@ from app.models.help_center import HelpCenter
 from app.helpers.forms.TurnForm import TurnForm
 from app.helpers.permission import permission
 from app.helpers.alert import add_alert, get_alert
-
+from app.helpers.forms.TurnSeekerForm import TurnSeekerForm
 import json
 
 
 @login_required
 @permission('turn_index')
 def index():
+    search_form = TurnSeekerForm(request.args)
 
-    turns = Turn.get_next_tuns(page=int(request.args.get('page', 1)),
+    turns = Turn.get_next_tuns(search_query=search_form.search_query.data,
+                               email=search_form.email.data,
+                               page=int(request.args.get('page', 1)),
                                per_page=Configuration.query.first().pagination_elements)
 
-    if turns.items.size() == 0:
-        add_alert(Alert("danger", "No tiene turnos cargados."))
-
-    return render_template("turn/index.html", turns=turns, alert=get_alert())
+    return render_template("turn/index.html", turns=turns, alert=get_alert(), search_form=search_form)
 
 
 @login_required
@@ -49,21 +49,24 @@ def new(id):
 @login_required
 @permission('turn_create')
 def create(id):
-    form = TurnForm()
 
     center = HelpCenter.query.get(id)
     if not center:
         add_alert(Alert("danger", "El centro no existe."))
         return redirect(url_for("turn_center_index", id=id))
 
+    form = TurnForm(center_id=id, id=None)
+
     if form.validate_on_submit():
-        Turn(help_center=HelpCenter.query.get(id),
-             email=form.email.data,
-             donor_phone_number=form.donor_phone_number.data,
-             day_hour=form.day_hour.data).save()
+        turn = Turn(help_center=HelpCenter.query.get(id),
+                    email=form.email.data,
+                    donor_phone_number=form.donor_phone_number.data,
+                    day_hour=form.day_hour.data)
+        turn.save()
+        add_alert(
+            Alert("success", f"El turno con fecha {turn.day_hour.strftime('%Y/%m/%d-%H:%M:%S')} de {turn.email} se creo correctamente."))
         return redirect(url_for("turn_center_index", id=id))
-    print(form.email.data)
-    print(form.day_hour.data)
+
     return render_template("turn/new.html", center_id=id, form=form)
 
 
@@ -82,7 +85,7 @@ def edit(id, id_turn):
 @login_required
 @permission('turn_update')
 def update(id, id_turn):
-    form = TurnForm()
+    form = TurnForm(center_id=id,)
 
     if not form.validate_on_submit():
         return render_template("turn/edit.html", id_center=id, id_turn=id_turn, form=form)

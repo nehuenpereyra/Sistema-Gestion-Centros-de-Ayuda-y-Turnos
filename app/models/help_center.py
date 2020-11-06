@@ -1,6 +1,7 @@
 
 import os
 import shutil
+import phonenumbers
 
 from flask import current_app
 
@@ -16,7 +17,8 @@ class HelpCenter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     __name = db.Column("name", db.String(32), nullable=False, unique=False)
     address = db.Column(db.String(32), nullable=False, unique=False)
-    phone_number = db.Column(db.String(16), nullable=False, unique=True)
+    _phone_number = db.Column("phone_number", db.String(
+        16), nullable=False, unique=True)
     opening_time = db.Column(db.Time, nullable=False, unique=False)
     closing_time = db.Column(db.Time, nullable=False, unique=False)
     center_type = db.relationship(
@@ -126,6 +128,15 @@ class HelpCenter(db.Model):
     def town(self, value):
         self.town_id = value.id
         self.town_object = value
+
+    @property
+    def phone_number(self):
+        return self._phone_number
+
+    @phone_number.setter
+    def phone_number(self, phone):
+        self._phone_number = phonenumbers.format_number(
+            phonenumbers.parse(phone, "AR"), phonenumbers.PhoneNumberFormat.INTERNATIONAL)
 
     def set_view_protocol(self, file):
         self.view_protocol_updated = bool(file) or (

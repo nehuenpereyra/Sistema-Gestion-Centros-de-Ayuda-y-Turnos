@@ -1,8 +1,10 @@
 import json
+import phonenumbers
 from datetime import datetime, date, time, timedelta
 from sqlalchemy import Date, Time, cast, and_
 
 from app.db import db
+#from app.models.help_center import HelpCenter
 
 
 class Turn(db.Model):
@@ -10,11 +12,22 @@ class Turn(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(32), nullable=False)
     day_hour = db.Column(db.DateTime, nullable=False, unique=False)
-    donor_phone_number = db.Column(db.String(16), nullable=False)
+    _donor_phone_number = db.Column(
+        "donor_phone_number", db.String(16), nullable=True)
     help_center = db.relationship(
         "HelpCenter", back_populates="turns")
     help_center_id = db.Column(
         db.Integer, db.ForeignKey('help_center.id'), nullable=False)
+
+    @property
+    def donor_phone_number(self):
+        return self._donor_phone_number
+
+    @donor_phone_number.setter
+    def donor_phone_number(self, phone):
+        if phone:
+            self._donor_phone_number = phonenumbers.format_number(
+                phonenumbers.parse(phone, "AR"), phonenumbers.PhoneNumberFormat.INTERNATIONAL)
 
     def save(self):
         if not self.id:
@@ -41,9 +54,9 @@ class Turn(db.Model):
         turn_date = datetime(in_date.year, in_date.month,
                              in_date.day, 9, 0, 0, 0)
         for x in range(14):
-            # if turn_date > date.today():
-            turns.append(turn_date)
-            turn_date = turn_date + timedelta(minutes=30)
+            if turn_date > date.today():
+                turns.append(turn_date)
+                turn_date = turn_date + timedelta(minutes=30)
 
         return turns.match_all(Turn.all_reserved_date(center_id, in_date), lambda each1,
                                each2: each1 != each2.day_hour)
@@ -72,7 +85,8 @@ class Turn(db.Model):
     def search(id_center, page, per_page):
         query = Turn.query
         query = query.filter(Turn.help_center_id == id_center)
-
+        query = query.order_by(
+            cast(Turn.day_hour, Date).desc(), cast(Turn.day_hour, Time).asc())
         return query.paginate(page=page, per_page=per_page, error_out=False)
 
     @staticmethod
@@ -89,12 +103,28 @@ class Turn(db.Model):
         return json.dumps({'turnos': array_json})
 
     @staticmethod
-    def get_next_tuns(page, per_page):
+    def get_next_tuns(search_query, email, page, per_page):
         query = Turn.query
         today = datetime.today()
+
+        if (search_query):
+            # query =
+            # query.filter(
+            # Turn.help_center.name.like(f"%{search_query}%"))
+            query.filter(Turn.help_center.has(
+                HelpCenter.name.like(f"%{search_query}%")))
+        if (email != "Elija alguno de los siguientes emails"):
+            query = query.filter_by(email=email)
+
         query = query.filter(cast(Turn.day_hour, Date).between(
             today, today + timedelta(hours=48)))
+
         query = query.order_by(
             cast(Turn.day_hour, Date).asc(), cast(Turn.day_hour, Time).asc())
 
         return query.paginate(page=page, per_page=per_page, error_out=False)
+
+    @ staticmethod
+    def get_all_emails():
+        return Turn.query.with_entities(Turn.email).distinct().all().collect(
+            lambda each: each[0])

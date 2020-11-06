@@ -31,7 +31,7 @@ def unique(class_, query_filter):
 
 class UserForm(SpanishForm):
 
-    id = IntegerField(widget=HiddenInput(), default=20)
+    id = IntegerField(widget=HiddenInput())
     name = StringField('Nombre', validators=[DataRequired(), Length(max=20)])
     surname = StringField('Apellido',
                           validators=[DataRequired(), Length(max=20)])
