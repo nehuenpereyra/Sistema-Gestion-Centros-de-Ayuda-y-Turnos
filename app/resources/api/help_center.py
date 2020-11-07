@@ -23,3 +23,19 @@ def index():
     }
 
     return json.jsonify(**help_center_schema)
+
+
+def show(id):
+
+    print(f"-- type: {type(id)} --")
+
+    help_center = HelpCenter.get_public_center(id)
+
+    if not help_center:
+        abort(404)
+
+    help_center_schema = {
+        "atributos": help_center.public_dict()
+    }
+
+    return json.jsonify(**help_center_schema)

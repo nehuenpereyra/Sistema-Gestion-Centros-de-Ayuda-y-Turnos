@@ -24,3 +24,5 @@ def set_routes(app):
 
     app.add_url_rule("/api/centros", "api_help_center_index",
                      api_help_center.index)
+    app.add_url_rule("/api/centro/<int:id>",
+                     "api_help_center_show", api_help_center.show)

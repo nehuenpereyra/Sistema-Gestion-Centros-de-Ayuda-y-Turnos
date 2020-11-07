@@ -179,6 +179,10 @@ class HelpCenter(db.Model):
         return HelpCenter.query.get(id)
 
     @staticmethod
+    def get_public_center(id):
+        return HelpCenter.query.filter_by(request_status=True, published=True, id=id).first()
+
+    @staticmethod
     def all_published(page=1, per_page=None):
         query = HelpCenter.query.filter_by(request_status=True, published=True)
         return query.paginate(page=page, per_page=per_page, error_out=False).items, query.count()
