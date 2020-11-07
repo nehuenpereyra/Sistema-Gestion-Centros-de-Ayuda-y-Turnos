@@ -46,3 +46,7 @@ class Town():
                         phase=TownPhase(id=phase_json["id"], title=phase_json["title"]))
         except:
             return None
+
+    @staticmethod
+    def get_by_name(name):
+        return Town.all().detect(lambda each: each.name == name)
