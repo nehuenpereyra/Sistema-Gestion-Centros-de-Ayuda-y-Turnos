@@ -9,7 +9,7 @@ from app.db import db
 
 from app.models.help_center_type import HelpCenterType
 from app.models.town import Town
-from app.models.turn import Turn
+#from app.models.turn import Turn
 
 
 class HelpCenter(db.Model):

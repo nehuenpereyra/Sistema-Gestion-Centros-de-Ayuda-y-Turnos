@@ -18,7 +18,6 @@ import json
 @permission('turn_index')
 def index():
     search_form = TurnSeekerForm(request.args)
-
     turns = Turn.get_next_tuns(search_query=search_form.search_query.data,
                                email=search_form.email.data,
                                page=int(request.args.get('page', 1)),
@@ -123,11 +122,15 @@ def delete(id, id_turn):
 
 def free_time(id):
 
+    # Se comprueba que el centro exista
     center = HelpCenter.query.get(id)
     if not center:
         abort(400)
 
+    # Se establece la fecha actual para buscar turnos libres
     search_date = date.today()
+
+    # Si se envia una fecha por parametro se la establece para buscar turnos libres
     if request.args.get('fecha'):
         try:
             search_date = datetime.strptime(
@@ -135,28 +138,69 @@ def free_time(id):
         except ValueError:
             abort(500)
 
+    # Se retorna un arreglo de turnos libres
     return Response(response=Turn.all_free_time_json(id, search_date), status=200, mimetype="application/json")
 
 
 def reserved(id):
-    form_ok = {
-        "center_id": "1",
-        "email": "tito@gmail.com",
-        "donor_phone_number": "4093184",
-        "day_hour": str(datetime(2020, 11, 5).strftime("%Y/%m/%d, %H:%M:%S"))}
-    #form_okk = jsonify(form_ok)
-    print(form_ok)
-    # jsonify(request.json)
-    form_okkk = json.dumps(form_ok)
-    form = TurnForm(obj=form_okkk)
-    if form.validate():
-        print("El fomulario es Correcto")
-    else:
-        print("El fomulario es Incorrecto")
-    #    abort(500)
-    for fieldName, errorMessages in form.errors.items():
-        print(fieldName)
-        for err in errorMessages:
-            print(err)
 
-    return Response(response=json.dumps(form_ok), status=200, mimetype="application/json")
+    data = request.json
+
+    try:
+        # Se comprueba que el centro exista
+        center = HelpCenter.query.get(data["centro_id"])
+        if not center or (data["centro_id"] != id):
+            abort(400)
+
+        # Se realiza la conversion de string a datetime
+        data_time_init = datetime.strptime(
+            f"{data['fecha']} - {data['hora_inicio']}:00", '%Y-%m-%d - %H:%M:%S')
+        data_time_end = datetime.strptime(
+            f"{data['fecha']} - {data['hora_fin']}:00", '%Y-%m-%d - %H:%M:%S')
+
+        # Se comprueba que la diferencia sea de media hora
+        if ((data_time_end-data_time_init).total_seconds() / 60) != 30:
+            abort(400)
+
+        # Se establece el campo de telefono de donante en una cadena vacia por si no envio ese campo
+        donor_phone_number = ""
+        if 'telefono_donante' in data:
+            donor_phone_number = data['telefono_donante']
+
+        # Se crea uns instancia del formulario con los datos recibidos
+        form = TurnForm(id=None, day_hour=data_time_init,
+                        center_id=id, email=data['email_donante'],
+                        donor_phone_number=donor_phone_number, meta={'csrf': False})
+
+        # Se validan los datos recibidos
+        if form.validate_on_submit():
+            Turn(help_center=center,
+                 email=form.email.data,
+                 donor_phone_number=form.donor_phone_number.data,
+                 day_hour=form.day_hour.data).save()
+
+            # Respuesta que se le entrega al cliente
+            # Si envia campos demas no seran utilizados en la respuesta
+            response = {
+                "atributos":
+                {
+                    "centro_id": data["centro_id"],
+                    "email_donante": data["email_donante"],
+                    "hora_inicio": data["hora_inicio"],
+                    "hora_fin": data["hora_fin"],
+                    "fecha": data["fecha"]
+                }
+            }
+            if 'telefono_donante' in data:
+                response["atributos"]["telefono_donante"] = data["telefono_donante"]
+
+            return jsonify(response)
+        else:
+            # Si no cumple con alguna de las validaciones
+            print("El fomulario es Incorrecto o ya esta cargado")
+            abort(400)
+
+    except Exception as e:
+        # Si existe alguna excepción imprime la excepción
+        print(f"Excepción: {e}")
+        abort(400)

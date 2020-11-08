@@ -4,7 +4,7 @@ from datetime import datetime, date, time, timedelta
 from sqlalchemy import Date, Time, cast, and_
 
 from app.db import db
-#from app.models.help_center import HelpCenter
+from app.models.help_center import HelpCenter
 
 
 class Turn(db.Model):
@@ -54,7 +54,7 @@ class Turn(db.Model):
         turn_date = datetime(in_date.year, in_date.month,
                              in_date.day, 9, 0, 0, 0)
         for x in range(14):
-            if turn_date > date.today():
+            if turn_date > datetime.today():
                 turns.append(turn_date)
                 turn_date = turn_date + timedelta(minutes=30)
 
@@ -95,7 +95,7 @@ class Turn(db.Model):
         turns = Turn.all_free_time(id_center, search_date)
         for turn in turns:
             array_json.append({
-                'centro_id': str(id),
+                'centro_id': str(id_center),
                 'horario_inicio': turn.strftime('%H:%M'),
                 'horario_fin': (turn + timedelta(minutes=30)).strftime('%H:%M'),
                 'fecha': turn.strftime('%Y/%m/%d')
@@ -107,13 +107,11 @@ class Turn(db.Model):
         query = Turn.query
         today = datetime.today()
 
-        if (search_query):
-            # query =
-            # query.filter(
-            # Turn.help_center.name.like(f"%{search_query}%"))
-            query.filter(Turn.help_center.has(
-                HelpCenter.name.like(f"%{search_query}%")))
-        if (email != "Elija alguno de los siguientes emails"):
+        # if (search_query):
+        #    query = query.join(HelpCenter.turns).filter(
+        #        HelpCenter.name.like(f"%{search_query}%"))
+
+        if (email and email != "Elija alguno de los siguientes emails"):
             query = query.filter_by(email=email)
 
         query = query.filter(cast(Turn.day_hour, Date).between(
