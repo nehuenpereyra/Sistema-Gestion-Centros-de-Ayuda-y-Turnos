@@ -15,7 +15,7 @@ from app.models.town import Town
 class HelpCenter(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    __name = db.Column("name", db.String(32), nullable=False, unique=False)
+    name = db.Column(db.String(32), nullable=False, unique=False)
     address = db.Column(db.String(32), nullable=False, unique=False)
     _phone_number = db.Column("phone_number", db.String(
         16), nullable=False, unique=True)
@@ -56,6 +56,18 @@ class HelpCenter(db.Model):
         self.latitude = latitude
         self.longitude = longitude
         self.turns = []
+
+    def public_dict(self):
+        return {
+            "nombre": self.name,
+            "direccion": self.address,
+            "telefono": self.phone_number,
+            "hora_apertura": self.opening_time.strftime("%H:%M"),
+            "hora_cierre": self.closing_time.strftime("%H:%M"),
+            "tipo": self.center_type.name,
+            "web": self.web_url,
+            "email": self.email
+        }
 
     def save(self):
         if not self.id:
@@ -107,17 +119,6 @@ class HelpCenter(db.Model):
     def reject_request(self):
         self.request_status = False
 
-    @property
-    def name(self):
-        return self.__name
-
-    @name.setter
-    def name(self, name):
-        old_view_protocol_path = self.get_view_protocol_path()
-        self.__name = name
-        if (os.path.exists(old_view_protocol_path)):
-            os.rename(old_view_protocol_path, self.get_view_protocol_path())
-
     @ property
     def town(self):
         if not self.town_object:
@@ -148,7 +149,7 @@ class HelpCenter(db.Model):
         return f'{current_app.config["UPLOAD_FOLDER"]}/help_centers/{self.id}'
 
     def get_view_protocol_filename(self):
-        return f"{self.name} - Protocolo.pdf"
+        return "Protocolo.pdf"
 
     def get_view_protocol_path(self):
         return os.path.join(self.get_upload_path(), self.get_view_protocol_filename())
@@ -176,6 +177,15 @@ class HelpCenter(db.Model):
     @staticmethod
     def get(id):
         return HelpCenter.query.get(id)
+
+    @staticmethod
+    def get_public_center(id):
+        return HelpCenter.query.filter_by(request_status=True, published=True, id=id).first()
+
+    @staticmethod
+    def all_published(page=1, per_page=None):
+        query = HelpCenter.query.filter_by(request_status=True, published=True)
+        return query.paginate(page=page, per_page=per_page, error_out=False).items, query.count()
 
     @staticmethod
     def delete(id):

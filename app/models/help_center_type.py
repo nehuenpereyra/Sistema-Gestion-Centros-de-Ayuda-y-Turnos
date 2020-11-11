@@ -16,6 +16,10 @@ class HelpCenterType(db.Model):
     def get(id):
         return HelpCenterType.query.get(id)
 
+    @staticmethod
+    def get_by_name(name):
+        return HelpCenterType.query.filter_by(name=name).first()
+
     def save(self):
         if not self.id:
             db.session.add(self)

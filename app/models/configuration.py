@@ -24,8 +24,12 @@ class Configuration(db.Model):
         db.session.commit()
 
     @staticmethod
+    def get():
+        return Configuration.query.first()
+
+    @staticmethod
     def update(title, description, contact_email, pagination_elements, enabled_site):
-        config = Configuration.query.first()
+        config = Configuration.get()
         config.title = title
         config.description = description
         config.contact_email = contact_email

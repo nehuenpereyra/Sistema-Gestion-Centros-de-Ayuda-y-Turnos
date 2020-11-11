@@ -1,4 +1,6 @@
+
 from app.resources import help_center
+import app.resources.api.help_center as api_help_center
 
 
 def set_routes(app):
@@ -19,3 +21,10 @@ def set_routes(app):
                      "help_center_accept", help_center.certify, defaults={"is_accepted": True})
     app.add_url_rule("/centro/rechazar/<int:id>",
                      "help_center_reject", help_center.certify, defaults={"is_accepted": False})
+
+    app.add_url_rule("/api/centros", "api_help_center_index",
+                     api_help_center.index)
+    app.add_url_rule("/api/centro/<int:id>",
+                     "api_help_center_show", api_help_center.show)
+    app.add_url_rule("/api/centro", "api_help_center_create",
+                     api_help_center.create, methods=["POST"])
