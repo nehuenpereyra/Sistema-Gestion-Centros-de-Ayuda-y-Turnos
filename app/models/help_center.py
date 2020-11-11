@@ -14,7 +14,7 @@ from app.models.turn import Turn
 class HelpCenter(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    __name = db.Column("name", db.String(32), nullable=False, unique=False)
+    name = db.Column(db.String(32), nullable=False, unique=False)
     address = db.Column(db.String(32), nullable=False, unique=False)
     phone_number = db.Column(db.String(16), nullable=False, unique=True)
     opening_time = db.Column(db.Time, nullable=False, unique=False)
@@ -117,17 +117,6 @@ class HelpCenter(db.Model):
     def reject_request(self):
         self.request_status = False
 
-    @property
-    def name(self):
-        return self.__name
-
-    @name.setter
-    def name(self, name):
-        old_view_protocol_path = self.get_view_protocol_path()
-        self.__name = name
-        if (os.path.exists(old_view_protocol_path)):
-            os.rename(old_view_protocol_path, self.get_view_protocol_path())
-
     @ property
     def town(self):
         if not self.town_object:
@@ -149,7 +138,7 @@ class HelpCenter(db.Model):
         return f'{current_app.config["UPLOAD_FOLDER"]}/help_centers/{self.id}'
 
     def get_view_protocol_filename(self):
-        return f"{self.name} - Protocolo.pdf"
+        return "Protocolo.pdf"
 
     def get_view_protocol_path(self):
         return os.path.join(self.get_upload_path(), self.get_view_protocol_filename())
