@@ -2,6 +2,7 @@ from os import path, environ
 
 from flask import Flask
 from flask_session import Session
+from smallthon import sm_list
 
 from app.db import set_db
 from config.config import config
@@ -36,6 +37,8 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(verify_permission=verify_permission)
     app.jinja_env.globals.update(url_for_page=url_for_page)
     app.jinja_env.globals.update(center_is_accepted=is_in_accepted_state)
+
+    sm_list()
 
     # Se agrega la ruta por defecto para subir archivos a la configuracion
     app.config['UPLOAD_FOLDER'] = "app/static/uploads"
