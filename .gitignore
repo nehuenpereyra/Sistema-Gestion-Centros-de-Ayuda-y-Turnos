@@ -115,3 +115,4 @@ coc-settings.json
 .vscode
 own
 
+app/static/uploads/protocolos/*
