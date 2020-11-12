@@ -26,7 +26,7 @@
         <h4 class="text-dark mb-4">Registrar Usuario</h4>
     </div>
     <form class="user needs-validation" action="{{ url_for('user_create') }}" method="post" id="new_form" >
-        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
         <div class="form-group row">
             <div class="col-sm-6 mb-3 mb-sm-0">
               {{ input(form.name, "Nombre") }}
@@ -63,5 +63,5 @@
 
 {% block scripts %}
   {{ super() }}
-  <script type="text/javascript" src="{{ url_for('static', filename='js/validation_password.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/validation_password.js') }}"></script>
 {% endblock %}

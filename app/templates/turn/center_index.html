@@ -49,7 +49,7 @@
                 {% if page %}
                     {% if page != turns.page %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for_page('turn_center_index', page) }}">{{ page }}</a>
+                            <a class="page-link" href="{{ url_for_page('turn_center_index', id=id_center, page=page) }}">{{ page }}</a>
                         </li>
                     {% else %}
                         <li class="page-item active">
@@ -71,5 +71,5 @@
 
 {% block scripts %}
   {{ super() }}
-  <script type="text/javascript" src="{{ url_for('static', filename='js/clear_search_form.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/clear_search_form.js') }}"></script>
 {% endblock %}

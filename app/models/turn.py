@@ -107,9 +107,9 @@ class Turn(db.Model):
         query = Turn.query
         today = datetime.today()
 
-        # if (search_query):
-        #    query = query.join(HelpCenter.turns).filter(
-        #        HelpCenter.name.like(f"%{search_query}%"))
+        if (search_query):
+            query = query.join(HelpCenter.turns).filter(
+                HelpCenter.name.like(f"%{search_query}%"))
 
         if (email and email != "Elija alguno de los siguientes emails"):
             query = query.filter_by(email=email)

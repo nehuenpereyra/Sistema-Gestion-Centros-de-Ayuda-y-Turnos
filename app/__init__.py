@@ -9,6 +9,7 @@ from config.routes import set_routes
 from app.helpers.login import set_login, authenticated
 from app.helpers.permission import verify_permission
 from app.helpers.pagination import url_for_page
+from app.helpers.help_center_status import is_in_accepted_state
 
 
 def create_app(environment="development"):
@@ -34,6 +35,7 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(is_authenticated=authenticated)
     app.jinja_env.globals.update(verify_permission=verify_permission)
     app.jinja_env.globals.update(url_for_page=url_for_page)
+    app.jinja_env.globals.update(center_is_accepted=is_in_accepted_state)
 
     # Se agrega la ruta por defecto para subir archivos a la configuracion
     app.config['UPLOAD_FOLDER'] = "app/static/uploads"

@@ -30,18 +30,35 @@ def index():
 @permission('turn_index')
 def center_index(id):
 
+    center = HelpCenter.query.get(id)
+    if not center:
+        add_alert(Alert("danger", "El centro no existe."))
+        return redirect(url_for("help_center_index"))
+
+    if center.is_in_pending_state():
+        add_alert(Alert(
+            "danger", "No se puede acceder ya que el centro esta pendiente de aceptación."))
+        return redirect(url_for("help_center_index"))
+
+    if center.is_in_rejected_state():
+        add_alert(
+            Alert("danger", "No se puede acceder ya que el centro esta rechazado."))
+        return redirect(url_for("help_center_index"))
+
     turns = Turn.search(id_center=id, page=int(request.args.get('page', 1)),
                         per_page=Configuration.query.first().pagination_elements)
 
-    if turns.items.size() == 0:
-        add_alert(Alert("danger", "No tiene turnos cargados."))
-
+    print("Llego")
     return render_template("turn/center_index.html", id_center=id, turns=turns, alert=get_alert())
 
 
 @login_required
 @permission('turn_create')
 def new(id):
+    center = HelpCenter.query.get(id)
+    if not center:
+        add_alert(Alert("danger", "El centro no existe."))
+        return redirect(url_for("turn_center_index", id=id))
     return render_template("turn/new.html", center_id=id, form=TurnForm())
 
 
@@ -57,7 +74,7 @@ def create(id):
     form = TurnForm(center_id=id, id=None)
 
     if form.validate_on_submit():
-        turn = Turn(help_center=HelpCenter.query.get(id),
+        turn = Turn(help_center=center,
                     email=form.email.data,
                     donor_phone_number=form.donor_phone_number.data,
                     day_hour=form.day_hour.data)
@@ -73,9 +90,18 @@ def create(id):
 @permission('turn_update')
 def edit(id, id_turn):
     turn = Turn.query.get(id_turn)
+    center = HelpCenter.query.get(id)
+
+    if not center:
+        add_alert(Alert("danger", "El centro no existe."))
+        return redirect(url_for("help_center_index"))
 
     if not turn:
         add_alert(Alert("danger", "El turno no existe."))
+        return redirect(url_for("turn_center_index", id=id))
+
+    if not center.turns.any_satisfy(lambda each: each.id == turn.id):
+        add_alert(Alert("danger", "El centro no tiene ese turno asignado."))
         return redirect(url_for("turn_center_index", id=id))
 
     return render_template("turn/edit.html", id_center=id, id_turn=id_turn, form=TurnForm(obj=turn))
@@ -84,7 +110,8 @@ def edit(id, id_turn):
 @login_required
 @permission('turn_update')
 def update(id, id_turn):
-    form = TurnForm(center_id=id,)
+    form = TurnForm(center_id=id)
+    print(form.center_id.data)
 
     if not form.validate_on_submit():
         return render_template("turn/edit.html", id_center=id, id_turn=id_turn, form=form)
@@ -127,6 +154,10 @@ def free_time(id):
     if not center:
         abort(400)
 
+    # Si el centro no esta aceptado retorna error 400
+    if not center.is_in_accepted_state():
+        abort(400)
+
     # Se establece la fecha actual para buscar turnos libres
     search_date = date.today()
 
@@ -150,6 +181,10 @@ def reserved(id):
         # Se comprueba que el centro exista
         center = HelpCenter.query.get(data["centro_id"])
         if not center or (data["centro_id"] != id):
+            abort(400)
+
+        # Si el centro no esta aceptado retorna error 400
+        if not center.is_in_accepted_state():
             abort(400)
 
         # Se realiza la conversion de string a datetime

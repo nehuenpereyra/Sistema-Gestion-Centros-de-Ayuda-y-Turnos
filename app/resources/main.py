@@ -6,8 +6,8 @@ from app.helpers.login import authenticated
 
 def index():
     if authenticated() == True:
-        if current_user.roles[0].name == "Administrador":
+        if current_user.roles.first().name == "Administrador":
             return redirect(url_for("user_index"))
-        return render_template("home.html")
+        return redirect(url_for("help_center_index"))
     else:
         return redirect(url_for("auth_login"))

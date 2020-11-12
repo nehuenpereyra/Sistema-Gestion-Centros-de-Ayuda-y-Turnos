@@ -47,18 +47,22 @@
                             {% endif %}
                         </div>
                         <div class="col-12 col-sm-auto d-flex justify-content-center align-items-center">
-                            <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('turn_center_index', id=help_center.id) }}">
-                                <i class="far fa-address-book"></i>
-                            </a>
+                            {% if center_is_accepted(help_center.id) %}
+                                <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('turn_center_index', id=help_center.id) }}">
+                                    <i class="far fa-address-book"></i>
+                                </a>
+                            {% endif %}
                             <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('help_center_show', id=help_center.id) }}">
                                 <i class="fas fa-eye"></i>
                             </a>
                             <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('help_center_edit', id=help_center.id) }}">
                                 <i class="fas fa-cog"></i>
                             </a>
-                            <a onclick="return confirm('¿Seguro que deseas eliminar el centro de ayuda {{ help_center.name }}?');" class="btn btn-danger btn-sm" role="button" href="{{ url_for('help_center_delete', id=help_center.id) }}">
-                                <i class="far fa-trash-alt"></i>
-                            </a>
+                            {% if verify_permission('help_center_delete') %}
+                                <a onclick="return confirm('¿Seguro que deseas eliminar el centro de ayuda {{ help_center.name }}?');" class="btn btn-danger btn-sm" role="button" href="{{ url_for('help_center_delete', id=help_center.id) }}">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </li>
@@ -95,5 +99,5 @@
 
 {% block scripts %}
   {{ super() }}
-  <script type="text/javascript" src="{{ url_for('static', filename='js/clear_search_form.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/clear_search_form.js') }}"></script>
 {% endblock %}

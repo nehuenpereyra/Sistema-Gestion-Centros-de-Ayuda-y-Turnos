@@ -26,14 +26,14 @@
           <a class="navbar-brand" href="/">Donaciones Covid19</a>
           {% if is_authenticated() %}
           <div class="nav-item dropdown show">
-            <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" >
+            <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="">
               <span class="d-none d-lg-inline mr-2 text-gray-600 small">{{current_user.username}}</span>
-              <img class="border rounded-circle img-profile" src="{{ url_for('static', filename='img/user.jpg') }}" style="height: 2rem; width: 2rem;"></a>
+              <img class="border rounded-circle img-profile" src="{{ url_for('static', filename='img/user.jpg') }}" style="height: 2rem; width: 2rem;" alt="Imagen del perfil del usuario"></a>
                 <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">
-                  <a class="dropdown-item" role="presentation" href="{{ url_for('user_profile') }}">
+                  <a href="{{ url_for('user_profile') }}" class="dropdown-item">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Perfil</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" role="presentation" href="{{ url_for('auth_logout') }}">
+                  <a href="{{ url_for('auth_logout') }}" class="dropdown-item">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Salir</a>
                 </div>
           </div>
@@ -60,10 +60,10 @@
     <footer class="d-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center mt-auto" style="background-color: #3a6ba6;position: relative;clear: both;margin-top: -150px;"><small class="d-xl-flex justify-content-xl-center" style="color: rgb(255,255,255);"><br>Donaciones Covid19 © 2020<br><br></small></footer>
   
   {% block scripts %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
   {%endblock%}
   </body>
 </html>

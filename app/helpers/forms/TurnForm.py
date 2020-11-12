@@ -25,7 +25,7 @@ def time_range(min, max):
 
 def time_exact():
     def _time_exact(form, field):
-        message = f'Debe se ingresar una hora en punto o y media.'
+        message = f'Debe ingresar una hora en punto o y media.'
         time = field.data.time()
 
         if (time.minute != 0 and time.minute != 30):
