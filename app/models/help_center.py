@@ -72,10 +72,7 @@ class HelpCenter(db.Model):
     def save(self):
         if not self.id:
             db.session.add(self)
-            db.session.commit()
-            os.makedirs(self.get_upload_path())
-        else:
-            db.session.commit()
+        db.session.commit()
 
         if self.view_protocol_updated:
             self.update_view_protocol()
@@ -98,7 +95,8 @@ class HelpCenter(db.Model):
 
     def remove(self):
         if self.id:
-            shutil.rmtree(self.get_upload_path())
+            if os.path.exists(self.get_view_protocol_path()):
+                os.remove(self.get_view_protocol_path())
 
             self.turns.do(lambda each: each.remove())
             db.session.delete(self)
@@ -146,13 +144,14 @@ class HelpCenter(db.Model):
         self.view_protocol_file = file
 
     def get_upload_path(self):
-        return f'{current_app.config["UPLOAD_FOLDER"]}/help_centers/{self.id}'
+        return f'{current_app.config["UPLOAD_FOLDER"]}/protocolos'
 
     def get_view_protocol_filename(self):
-        return "Protocolo.pdf"
+        return f"Protocolo_{self.id}.pdf"
 
     def get_view_protocol_path(self):
-        return os.path.join(self.get_upload_path(), self.get_view_protocol_filename())
+        return self.get_upload_path() + "/" + self.get_view_protocol_filename()
+        # return os.path.join(self.get_upload_path(), self.get_view_protocol_filename())
 
     def update_view_protocol(self):
 

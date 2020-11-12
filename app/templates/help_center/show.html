@@ -61,7 +61,7 @@
             <h6 class="mb-0">Protocolo de vista</h6>
             <small class="ml-2">
                 {% if help_center.has_view_protocol %}
-                    <a href="{{ url_for('static', filename='uploads/help_centers/{}/{}'.format(help_center.id, help_center.get_view_protocol_filename())) }}">Protocolo</a>
+                    <a href="{{ url_for('static', filename='uploads/protocolos/{}'.format(help_center.get_view_protocol_filename())) }}">Protocolo</a>
                 {% else %}
                     No cargado
                 {% endif %}
