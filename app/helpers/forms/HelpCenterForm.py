@@ -64,8 +64,10 @@ class HelpCenterForm(FlaskForm):
                        Optional(), Email(), Length(max=32), unique(HelpCenter, "email")], filters=[lambda value: value if value else None])
     view_protocol = FileField("Protocolo de Vista", validators=[
                               Optional(), FileAllowed(["pdf"], "El documento debe ser un pdf.")])
-    latitude = FloatField("Latitud", validators=[Optional()])
-    longitude = FloatField("Longitud", validators=[Optional()])
+    latitude = FloatField("Latitud", validators=[
+                          Optional()], widget=HiddenInput())
+    longitude = FloatField("Longitud", validators=[
+                           Optional()], widget=HiddenInput())
 
     published = BooleanField("Publicado", default=True)
 

@@ -35,6 +35,12 @@
 
 {% block head %}
   {{ super() }}
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
 {% endblock %}
 
 {% block sub_content %}
@@ -44,6 +50,8 @@
         <form action="{% block form_action %}{% endblock %}" method="POST" enctype="multipart/form-data">
             {% block form_data %}
             {{ form.csrf_token }}
+            {{ form.latitude }}
+            {{ form.longitude }}
             
             <div class="form-group">{{ input(form.name) }}</div>
             <div class="form-row">
@@ -70,12 +78,7 @@
                 {{ file_input(form.view_protocol) }}
             </div>
             <div class="form-row">
-                <div class="col-12 col-sm-6">
-                    <div class="form-group">{{ input(form.latitude) }}</div>
-                </div>
-                <div class="col-12 col-sm-6">
-                    <div class="form-group">{{ input(form.longitude) }}</div>
-                </div>
+                <div id="mapid" style="height: 600px; width: 600px;"></div>
             </div>
             <div class="form-check">{{ checkbox_input(form.published) }}</div>
             {% endblock %}
@@ -85,4 +88,9 @@
         </form>
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/coord_map.js') }}"></script>
 {% endblock %}
