@@ -91,21 +91,21 @@ class HelpCenterSeeder(Seeder):
         print("[TurnSeeder]")
 
         turn_one = Turn(email="juan@gmail.com",
-                        day_hour=datetime.now(), donor_phone_number="2214053283", help_center=food_center_1)
+                        day_hour=datetime(2020, 11, 13, 12, 30, 00), donor_phone_number="2214053283", help_center=food_center_2)
         turn_one.save()
         print(f" - {turn_one.id} OK")
 
         turn_two = Turn(email="ramiro@gmail.com",
-                        day_hour=datetime.now(), donor_phone_number="2214053283", help_center=food_center_1)
+                        day_hour=datetime(2020, 11, 14, 9, 00, 00), donor_phone_number="2214053283", help_center=food_center_2)
         turn_two.save()
         print(f" - {turn_two.id} OK")
 
         turn_three = Turn(email="julieta@gmail.com",
-                          day_hour=datetime.now(), donor_phone_number="2214053283", help_center=food_center_2)
+                          day_hour=datetime(2020, 11, 13, 15, 30, 00), donor_phone_number="2214053283", help_center=food_center_2)
         turn_three.save()
         print(f" - {turn_three.id} OK")
 
         turn_four = Turn(email="marcela@gmail.com",
-                         day_hour=datetime.now(), donor_phone_number="2214053283", help_center=clothing_center)
+                         day_hour=datetime(2020, 11, 13, 10, 30, 00), donor_phone_number="2214053283", help_center=blood_center)
         turn_four.save()
         print(f" - {turn_four.id} OK")
