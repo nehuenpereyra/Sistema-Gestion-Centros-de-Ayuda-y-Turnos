@@ -16,8 +16,9 @@ class TownPhase:
     def all():
         api_url = current_app.config["REFERENCES_API_URL"] + "/fases"
         try:
+            json_status = requests.get(api_url, params={"per_page": 0}).json()
             json_result = requests.get(
-                api_url, params={"per_page": 600}).json()
+                api_url, params={"per_page": json_status["total"]}).json()
             return json_result["data"].collect(lambda each: TownPhase(each["id"], each["title"]))
         except:
             return None

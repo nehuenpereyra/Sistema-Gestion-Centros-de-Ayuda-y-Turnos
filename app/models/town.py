@@ -21,8 +21,10 @@ class Town():
         api_url = current_app.config["REFERENCES_API_URL"] + "/municipios"
 
         try:
+            json_status = requests.get(api_url, params={"per_page": 0}).json()
+
             json_result = requests.get(
-                api_url, params={"per_page": 600}).json()
+                api_url, params={"per_page": json_status["total"]}).json()
 
             phases = {value["id"]: TownPhase(value["id"], value["title"])
                       for value in json_result["data"]["Phase"].values()}
