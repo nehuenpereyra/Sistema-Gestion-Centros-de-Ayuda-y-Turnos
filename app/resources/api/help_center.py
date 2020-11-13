@@ -66,7 +66,7 @@ def create():
         phone_number=form.telefono.data,
         opening_time=form.hora_apertura.data,
         closing_time=form.hora_cierre.data,
-        center_type=HelpCenterType.get_by_name(form.tipo_centro.data),
+        center_type=HelpCenterType.get_by_name(form.tipo.data),
         town=Town.get_by_name(form.municipio.data),
         web_url=form.web_url.data,
         email=form.email.data,
