@@ -29,7 +29,7 @@ def index():
 @login_required
 @permission('turn_index')
 def center_index(id):
-
+    search_form = TurnSeekerForm(request.args)
     center = HelpCenter.query.get(id)
     if not center:
         add_alert(Alert("danger", "El centro no existe."))
@@ -45,11 +45,11 @@ def center_index(id):
             Alert("danger", "No se puede acceder ya que el centro esta rechazado."))
         return redirect(url_for("help_center_index"))
 
-    turns = Turn.search(id_center=id, page=int(request.args.get('page', 1)),
+    turns = Turn.search(id_center=id, email=search_form.email.data, page=int(request.args.get('page', 1)),
                         per_page=Configuration.query.first().pagination_elements)
 
     print("Llego")
-    return render_template("turn/center_index.html", id_center=id, turns=turns, alert=get_alert())
+    return render_template("turn/center_index.html", id_center=id, turns=turns, alert=get_alert(), name_center=center.name, search_form=search_form)
 
 
 @login_required
@@ -165,7 +165,7 @@ def free_time(id):
     if request.args.get('fecha'):
         try:
             search_date = datetime.strptime(
-                request.args.get('fecha'), '%Y-%m-%d').date()
+                request.args.get('fecha'), '%d-%m-%Y').date()
         except ValueError:
             abort(500)
 

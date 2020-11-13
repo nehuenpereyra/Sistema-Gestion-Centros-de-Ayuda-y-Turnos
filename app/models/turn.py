@@ -1,7 +1,7 @@
 import json
 import phonenumbers
 from datetime import datetime, date, time, timedelta
-from sqlalchemy import Date, Time, cast, and_
+from sqlalchemy import Date, DateTime, Time, cast, and_
 
 from app.db import db
 from app.models.help_center import HelpCenter
@@ -82,9 +82,11 @@ class Turn(db.Model):
         return None
 
     @staticmethod
-    def search(id_center, page, per_page):
+    def search(id_center, email, page, per_page):
         query = Turn.query
         query = query.filter(Turn.help_center_id == id_center)
+        if (email and email != "Elija alguno de los siguientes emails"):
+            query = query.filter_by(email=email)
         query = query.order_by(
             cast(Turn.day_hour, Date).desc(), cast(Turn.day_hour, Time).asc())
         return query.paginate(page=page, per_page=per_page, error_out=False)
@@ -114,7 +116,7 @@ class Turn(db.Model):
         if (email and email != "Elija alguno de los siguientes emails"):
             query = query.filter_by(email=email)
 
-        query = query.filter(cast(Turn.day_hour, Date).between(
+        query = query.filter(cast(Turn.day_hour, DateTime).between(
             today, today + timedelta(hours=48)))
 
         query = query.order_by(
