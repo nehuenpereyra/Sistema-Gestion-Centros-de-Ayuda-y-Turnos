@@ -39,7 +39,7 @@ class HelpCenterApiForm(FlaskForm):
     hora_apertura = TimeField(validators=[DataRequired()])
     hora_cierre = TimeField(validators=[DataRequired()])
 
-    tipo_centro = SelectField(validators=[DataRequired()], coerce=str)
+    tipo = SelectField(validators=[DataRequired()], coerce=str)
     municipio = SelectField(validators=[DataRequired()], coerce=str)
 
     web_url = URLField(validators=[Optional(), unique(HelpCenter, "web_url"), Length(
@@ -52,6 +52,6 @@ class HelpCenterApiForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super(HelpCenterApiForm, self).__init__(*args, **kwargs)
-        self.tipo_centro.choices = HelpCenterType.query.all() \
+        self.tipo.choices = HelpCenterType.query.all() \
             .collect(lambda each: (each.name, each.name))
         self.municipio.choices = Town.all().collect(lambda each: (each.name, each.name))
