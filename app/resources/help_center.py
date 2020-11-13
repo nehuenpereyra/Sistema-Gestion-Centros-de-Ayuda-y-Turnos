@@ -101,9 +101,6 @@ def update(id):
     help_center.latitude = form.latitude.data
     help_center.longitude = form.longitude.data
 
-    print(f"center_type: {help_center.center_type}")
-    print(f"town: {help_center.town}")
-
     if form.delete_view_protocol.data and help_center.has_view_protocol:
         help_center.view_protocol = None
     elif form.view_protocol.data:

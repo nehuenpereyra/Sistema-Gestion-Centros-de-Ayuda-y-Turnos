@@ -78,22 +78,6 @@ class HelpCenter(db.Model):
         if self.view_protocol_updated:
             self.update_view_protocol()
 
-    # def update(self,
-    #     name=self.name,
-    #     address=self.address,
-    #     phone_number=self.phone_number,
-    #     opening_time=self.opening_time,
-    #     closing_time=self.closing_time,
-    #     center_type=self.center_type,
-    #     town=self.town,
-    #     web_url=self.web_url,
-    #     email=self.email,
-    #     published=self.published,
-    #     request_status=self.request_status,
-    #     view_protocol=self.view_protocol,
-    #     latitude=self.latitude,
-    #     longitude=self.longitude)
-
     def remove(self):
         if self.id:
             shutil.rmtree(self.get_upload_path())
