@@ -11,6 +11,7 @@ from app.helpers.login import set_login, authenticated
 from app.helpers.permission import verify_permission
 from app.helpers.pagination import url_for_page
 from app.helpers.help_center_status import is_in_accepted_state
+from flask_cors import CORS
 
 
 def create_app(environment="development"):
@@ -25,6 +26,9 @@ def create_app(environment="development"):
     # Carga de la configuración
     env = environ.get("FLASK_ENV", "development")
     app.config.from_object(config[env])
+
+    # Agrega CORS
+    CORS(app)
 
     # Añade a la app flask login
     set_login(app)
