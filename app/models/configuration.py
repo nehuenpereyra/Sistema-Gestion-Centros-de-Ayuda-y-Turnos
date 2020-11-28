@@ -9,7 +9,7 @@ class Configuration(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(30), nullable=False, default="")
-    description = db.Column(db.String(90), nullable=False, default="")
+    description = db.Column(db.String(160), nullable=False, default="")
     contact_email = db.Column(
         db.String(30), unique=True, nullable=False, default="")
     pagination_elements = db.Column(db.Integer, nullable=False, default=10)

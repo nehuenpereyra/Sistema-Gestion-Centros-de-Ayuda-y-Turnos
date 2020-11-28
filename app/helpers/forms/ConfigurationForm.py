@@ -8,7 +8,7 @@ from wtforms.fields.html5 import EmailField
 class ConfigurationForm(SpanishForm):
     title = StringField('Titulo', validators=[DataRequired(), Length(max=30)])
     description = StringField('Descripción', validators=[
-                              DataRequired(), Length(max=90)], widget=TextArea())
+                              DataRequired(), Length(max=160)], widget=TextArea())
     contact_email = EmailField('Email de contacto', validators=[
         DataRequired(), Email(), Length(max=30)])
     pagination_elements = IntegerField(

@@ -209,7 +209,7 @@ _En el modelo se agrego un metodo llamado `all_free_time_json` el cual retorna u
 
 ### Ver turnos disponibles para una fecha
 
-**Ruta:** `/centros/<int:id>/turnos_disponibles/?fecha=<date:día-mes-año>`
+**Ruta:** `/api/centros/<int:id>/turnos_disponibles/?fecha=<date:día-mes-año>`
 
 **Metodo:** `GET`
 
@@ -310,13 +310,14 @@ _En el modelo se agrego un metodo llamado `all_free_time_json` el cual retorna u
       "horario_fin": "16:00",
       "fecha": "2020/11/15"
     }
-  ]
+  ],
+  "centro": "Centro la Papa"
 }
 ```
 
 ### Solicitar reserva de un turno
 
-**Ruta:** `/centros/<int:id>/reserva`
+**Ruta:** `/api/centros/<int:id>/reserva`
 
 **Metodo:** `POST`
 

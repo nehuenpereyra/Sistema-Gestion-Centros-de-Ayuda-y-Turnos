@@ -152,11 +152,11 @@ def free_time(id):
     # Se comprueba que el centro exista
     center = HelpCenter.query.get(id)
     if not center:
-        abort(400)
+        abort(404)
 
     # Si el centro no esta aceptado retorna error 400
     if not center.is_in_accepted_state():
-        abort(400)
+        abort(404)
 
     # Se establece la fecha actual para buscar turnos libres
     search_date = date.today()
@@ -169,8 +169,10 @@ def free_time(id):
         except ValueError:
             abort(500)
 
-    # Se retorna un arreglo de turnos libres
-    return Response(response=Turn.all_free_time_json(id, search_date), status=200, mimetype="application/json")
+    send_data = json.loads(Turn.all_free_time_json(id, search_date))
+    send_data["centro"] = HelpCenter.get(id).name
+
+    return Response(response=json.dumps(send_data), status=200, mimetype="application/json")
 
 
 def reserved(id):

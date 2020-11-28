@@ -16,6 +16,6 @@ def set_routes(app):
     app.add_url_rule("/centro/<int:id>/turno/borrar/<int:id_turn>",
                      "turn_delete", turn.delete)
     app.add_url_rule(
-        "/centros/<int:id>/turnos_disponibles/", "turn_free_time", turn.free_time)
-    app.add_url_rule("/centros/<int:id>/reserva",
+        "/api/centros/<int:id>/turnos_disponibles/", "turn_free_time", turn.free_time)
+    app.add_url_rule("/api/centros/<int:id>/reserva",
                      "turn_reserved", turn.reserved, methods=["POST"])
