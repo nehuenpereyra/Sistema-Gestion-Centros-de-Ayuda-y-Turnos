@@ -58,6 +58,19 @@ class HelpCenter(db.Model):
         self.turns = []
 
     def public_dict(self):
+        if self.latitude:
+            return {
+                "nombre": self.name,
+                "direccion": self.address,
+                "telefono": self.phone_number,
+                "hora_apertura": self.opening_time.strftime("%H:%M"),
+                "hora_cierre": self.closing_time.strftime("%H:%M"),
+                "tipo": self.center_type.name,
+                "web": self.web_url,
+                "email": self.email,
+                "latitude": self.latitude,
+                "longitude": self.longitude,
+            }
         return {
             "nombre": self.name,
             "direccion": self.address,
