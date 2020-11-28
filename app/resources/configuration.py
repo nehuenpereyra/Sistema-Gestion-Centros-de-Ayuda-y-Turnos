@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, url_for, abort
+from flask import redirect, render_template, request, url_for, abort, jsonify
 from flask_login import login_required
 
 from app.helpers.permission import permission
@@ -27,3 +27,13 @@ def update():
             Alert("success", f"La configuración se actualizo correctamente."))
         return redirect(url_for("index"))
     return render_template("configuration/update.html", form=form)
+
+def api():
+    config = Configuration.query.all().first()
+    response = {
+        "titulo": config.title,
+        "descripcion": config.description,
+        "contacto": config.contact_email,
+        "estado_sitio": config.enabled_site
+    }
+    return jsonify(response)

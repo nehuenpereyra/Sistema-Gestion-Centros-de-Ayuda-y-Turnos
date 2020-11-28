@@ -56,7 +56,7 @@ class Turn(db.Model):
         for x in range(14):
             if turn_date > datetime.today():
                 turns.append(turn_date)
-                turn_date = turn_date + timedelta(minutes=30)
+            turn_date = turn_date + timedelta(minutes=30)
 
         return turns.match_all(Turn.all_reserved_date(center_id, in_date), lambda each1,
                                each2: each1 != each2.day_hour)

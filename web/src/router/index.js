@@ -24,6 +24,11 @@ const routes = [
     name: "Reservation",
     component: () => import("../views/Reservation.vue"),
   },
+  {
+    path: "/centros/mapa",
+    name: "HelpCenterMap",
+    component: () => import("../views/HelpCenterMap.vue"),
+  },
 ];
 
 const router = new VueRouter({
