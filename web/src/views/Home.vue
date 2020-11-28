@@ -29,7 +29,7 @@
                     title="Solicitar Centro"
                     description="Solicitar la creación de un nuevo centro de ayuda"
                     icon="fas fa-plus-circle"
-                    link="#"
+                    link="/centro/solicitud"
                 />
             </div>
         </div>
