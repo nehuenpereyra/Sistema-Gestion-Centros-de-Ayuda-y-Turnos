@@ -176,6 +176,7 @@ def free_time(id):
 def reserved(id):
 
     data = request.json
+    print(request.json)
 
     try:
         # Se comprueba que el centro exista
