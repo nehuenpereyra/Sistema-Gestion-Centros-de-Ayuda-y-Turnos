@@ -22,7 +22,7 @@
               title="Solicitar Turno"
               description="Solicitar un turno de atención para uno de los centros de ayuda disponibles"
               icon="far fa-address-card"
-              link="#"
+              link="/centros"
             />
           </div>
           <div class="col-md-4 d-flex justify-content-center mb-3">

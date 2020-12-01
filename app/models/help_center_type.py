@@ -8,9 +8,20 @@ class HelpCenterType(db.Model):
     name = db.Column(db.String(32), unique=True, nullable=False)
     help_centers = db.relationship("HelpCenter", back_populates="center_type")
 
+    def public_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.name
+        }
+
     @staticmethod
     def all():
         return HelpCenterType.query.all()
+
+    @staticmethod
+    def all_paginated(page=1, per_page=None):
+        return HelpCenterType.query.paginate(page=page, per_page=per_page, error_out=False).items, \
+            HelpCenterType.query.count()
 
     @staticmethod
     def get(id):

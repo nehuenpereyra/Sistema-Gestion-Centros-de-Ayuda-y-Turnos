@@ -44,10 +44,8 @@
                         <div class="form-group">
                             <label for="type_input">Tipo de Centro*</label>
                             <select class="form-control" id="type_input" name="type" v-model="type" required>
-                                <option value="" disabled="">Por favor, seleccione uno</option>
-                                <option value="1">Centro de Alimentos</option>
-                                <option value="2">Centro de Ropa</option>
-                                <option value="3">Centro de Sangre</option>
+                                <option disabled value="">Por favor, seleccione uno</option>
+                                <option v-for="type of types" :value="type.nombre" :key="type.id">{{ type.nombre }}</option>
                             </select>
                         </div>
                     </div>
@@ -57,9 +55,8 @@
                         <div class="form-group">
                             <label for="town_input">Municipio*</label>
                             <select class="form-control" id="town_input" name="town" v-model="town" required>
-                                <option value="" disabled="">Por favor, seleccione uno</option>
-                                <option value="1">Almirante Brown</option>
-                                <option value="2">Avellaneda</option>
+                                <option disabled value="">Por favor, seleccione uno</option>
+                                <option v-for="town of towns" :value="town.name" :key="town.id">{{ town.name }}</option>
                             </select>
                         </div>
                     </div>
@@ -89,6 +86,18 @@
 </template>
 
 <script>
+
+const axios = require('axios');
+        
+const axiosApi = axios.create({
+    baseURL: "http://localhost:5000",
+    headers: { "Content-Type": "application/json" }
+});
+
+const axiosReferenceApi = axios.create({
+    baseURL: "https://api-referencias.proyecto2020.linti.unlp.edu.ar"
+});
+
 export default {
     name: "HelpCenterRequest",
     data() {
@@ -98,16 +107,90 @@ export default {
             phone: "+54 2944 106080",
             opening_time: "09:00",
             closing_time: "16:00",
-            type: "1",
-            town: "2",
+            type: "",
+            town: "",
             web: "",
-            email: ""
+            email: "",
+            latitude: null,
+            longitude: null,
+            types: [],
+            towns: []
         }
     },
     methods: {
-        submit() {
-            console.log(this.$data);
+        async getTowns() {
+            
+            try {
+
+                const firstResponse = await axiosReferenceApi.get("/municipios", {
+                    params: { per_page: 0}
+                });
+
+                const response = await axiosReferenceApi.get("/municipios", {
+                    params: { per_page: firstResponse.data.total}
+                });
+
+                this.towns = Object.values(response.data.data.Town);
+
+            } catch (error) {
+                
+                this.towns = []
+
+            }
+            
+        }, async getHelpCenterTypes() {
+            
+            try {
+
+                const firstResponse = await axiosApi.get("/api/tipos_centros", {
+                    params: { por_pagina: 0}
+                });
+
+                const response = await axiosApi.get("/api/tipos_centros", {
+                    params: { por_pagina: firstResponse.data.total}
+                });
+
+                this.types = response.data.datos;
+
+            } catch (error) {
+                
+                this.types = []
+
+            }
+            
+        },
+        async submit() {
+
+            try {
+
+                const response = await axiosApi.post("/api/centro", {
+                    "nombre": this.name,
+                    "direccion": this.address,
+                    "telefono": this.phone,
+                    "hora_apertura": this.opening_time,
+                    "hora_cierre": this.closing_time,
+                    "tipo": this.type,
+                    "municipio": this.town,
+                    "web_url": this.web,
+                    "email": this.email,
+                    "latitud": this.latitude,
+                    "longitud": this.longitude,
+                });
+
+                console.log(response.data);
+
+            } catch(error) {
+                console.log(`error: ${error}`);
+            }
+
         }
+
+    },
+    created() {
+
+        this.getTowns();
+        this.getHelpCenterTypes();
+        
     }
 }
 </script>

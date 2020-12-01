@@ -30,6 +30,11 @@ const routes = [
     name: "HelpCenterMap",
     component: () => import("@/views/HelpCenterMap.vue"),
   },
+  {
+    path: "/centros",
+    name: "HelpCenterList",
+    component: () => import("@/views/HelpCenterList.vue")
+  }
 ];
 
 const router = new VueRouter({
