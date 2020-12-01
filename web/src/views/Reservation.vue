@@ -127,6 +127,7 @@ export default {
         });
     },
     postTurn() {
+      this.alert = false;
       let send_data = {
         centro_id: Number(this.$route.params.center_id),
         email_donante: this.email,
