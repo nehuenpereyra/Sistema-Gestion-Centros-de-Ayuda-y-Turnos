@@ -24,6 +24,11 @@ const routes = [
     path: "/centro/solicitud",
     name: "HelpCenterRequest",
     component: () => import("@/views/HelpCenterRequest.vue")
+  },
+  {
+    path: "/centros",
+    name: "HelpCenterList",
+    component: () => import("@/views/HelpCenterList.vue")
   }
 ];
 

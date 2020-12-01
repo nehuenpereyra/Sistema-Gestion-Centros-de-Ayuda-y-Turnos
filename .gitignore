@@ -114,6 +114,7 @@ flask_session
 coc-settings.json
 .vscode
 own
+app/static/uploads/protocolos/*
 
 ### Vue ###
 # gitignore template for Vue.js projects
