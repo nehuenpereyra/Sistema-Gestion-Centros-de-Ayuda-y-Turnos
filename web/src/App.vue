@@ -2,7 +2,12 @@
   <div id="app" style="min-height: 100%">
     <div style="margin-bottom: 100px">
       <navbar />
-      <router-view />
+      <div
+        class="container clear-top"
+        style="overflow: auto; padding-bottom: 150px"
+      >
+        <router-view />
+      </div>
     </div>
     <Footer />
   </div>

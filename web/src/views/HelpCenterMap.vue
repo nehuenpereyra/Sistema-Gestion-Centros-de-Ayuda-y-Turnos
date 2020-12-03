@@ -4,11 +4,10 @@
   >
     <h4 class="text-left mt-4">Mapa de los Centros de Ayuda</h4>
     <div style="display: flex; justify-content: center">
-      <div style="height: 600px; width: 600px" class="border">
+      <div style="height: 600px; width: 100%" class="border">
         <l-map
           :zoom="zoom"
           :center="center"
-          :options="mapOptions"
           :bounds="bounds"
           :max-bounds="maxBounds"
           style="height: 100%"
@@ -76,18 +75,30 @@ export default {
   methods: {
     fetchCenters() {
       axios
-        .get("http://127.0.0.1:5000/api/centros")
+        .get("http://127.0.0.1:5000/api/tipos_centros", {
+          params: { por_pagina: 0 },
+        })
         .then((response) => {
-          response.data.centros.forEach((item) => {
-            if (item.latitude != null)
-              this.markers.push({
-                name: item.nombre,
-                direction: item.direccion,
-                telephone: item.telefono,
-                schedule: `${item.hora_apertura} - ${item.hora_cierre}`,
-                location: latLng(item.latitude, item.longitude),
+          axios
+            .get("http://127.0.0.1:5000/api/centros", {
+              params: { por_pagina: response.data.total },
+            })
+            .then((response) => {
+              response.data.centros.forEach((item) => {
+                if (item.latitude != null)
+                  this.markers.push({
+                    name: item.nombre,
+                    direction: item.direccion,
+                    telephone: item.telefono,
+                    schedule: `${item.hora_apertura} - ${item.hora_cierre}`,
+                    location: latLng(item.latitude, item.longitude),
+                  });
               });
-          });
+            })
+            .catch((e) => {
+              console.log("Error");
+              console.log(e);
+            });
         })
         .catch((e) => {
           console.log("Error");

@@ -165,7 +165,7 @@
           </div>
         </div>
         <label>Localización</label>
-        <div style="height: 600px; width: 600px" class="border">
+        <div style="height: 600px; width: 100%" class="border">
           <l-map
             :zoom="zoom"
             :center="center"

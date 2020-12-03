@@ -21,11 +21,11 @@ def default_json(default=str):
 
 def index():
     page = int(request.args.get("pagina", 1))
+    per_page = int(request.args.get("por_pagina", Configuration.get().pagination_elements))
 
-    if page < 1:
+    if page < 1 or per_page < 0:
         abort(400)
 
-    per_page = Configuration.get().pagination_elements
     help_centers, total = HelpCenter.all_published(
         page=page, per_page=per_page)
 
