@@ -20,7 +20,8 @@
         </button>
       </div>
     <h5 class="mt-3">Solicitar Centro</h5>
-    <div class="border rounded shadow-sm mt-3 p-3" style="background: white">
+    <div class="text-left">Los campos con (*) son obligatorios.</div>
+    <div class="bg-white border rounded shadow-sm mt-3 p-3">
       <form method="post" @submit.prevent="submit">
         <div class="form-row">
           <div class="col">

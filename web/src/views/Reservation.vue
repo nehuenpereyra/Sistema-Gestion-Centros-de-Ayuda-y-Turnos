@@ -20,7 +20,7 @@
       </div>
       <h4 class="text-left mt-4">Solicitar turno para el {{ center_name }}</h4>
       <div class="text-left">Los campos con (*) son obligatorios.</div>
-      <div class="shadow-sm mt-3 p-3">
+      <div class="bg-white border rounded shadow-sm mt-3 p-3">
         <form class="text-left user" method="post" @submit.prevent="postTurn">
           <div class="form-group row">
             <div class="col-sm-6 mb-3 mb-sm-0">
