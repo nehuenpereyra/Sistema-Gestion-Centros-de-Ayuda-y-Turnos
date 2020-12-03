@@ -75,7 +75,7 @@ export default {
   methods: {
     fetchCenters() {
       axios
-        .get("https://admin-grupo20.proyecto2020.linti.unlp.edu.ar/api/tipos_centros", {
+        .get("https://admin-grupo20.proyecto2020.linti.unlp.edu.ar/api/centros", {
           params: { por_pagina: 0 },
         })
         .then((response) => {
