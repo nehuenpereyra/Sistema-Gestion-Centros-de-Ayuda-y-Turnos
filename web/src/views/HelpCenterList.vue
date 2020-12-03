@@ -63,7 +63,7 @@ import HelpCenterDetailModal from '../components/HelpCenterDetailModal.vue';
 const axios = require('axios');
         
 const axiosApi = axios.create({
-    baseURL: "http://localhost:5000",
+    baseURL: "https://grupo20.proyecto2020.linti.unlp.edu.ar",
     headers: { "Content-Type": "application/json" }
 });
 

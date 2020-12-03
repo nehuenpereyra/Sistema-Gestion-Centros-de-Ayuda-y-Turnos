@@ -25,7 +25,7 @@ export default {
   methods: {
     fetchCenters() {
       axios
-        .get("http://127.0.0.1:5000/api/configuracion")
+        .get("https://grupo20.proyecto2020.linti.unlp.edu.ar/api/configuracion")
         .then((response) => {
           this.title = response.data.titulo;
           this.contact = response.data.contacto;

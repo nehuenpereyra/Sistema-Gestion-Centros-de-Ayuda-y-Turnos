@@ -201,7 +201,7 @@ Icon.Default.mergeOptions({
 });
 
 const axiosApi = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://grupo20.proyecto2020.linti.unlp.edu.ar",
   headers: { "Content-Type": "application/json" },
 });
 
@@ -218,11 +218,11 @@ export default {
   },
   data() {
     return {
-      name: "Centro la Galleta",
-      address: "Av 60 e80 y 81",
-      phone: "+54 2944 106080",
-      opening_time: "09:00",
-      closing_time: "16:00",
+      name: "",
+      address: "",
+      phone: "",
+      opening_time: "",
+      closing_time: "",
       type: "",
       town: "",
       web: "",
@@ -309,7 +309,7 @@ export default {
       */
 
       axios
-        .post(`http://127.0.0.1:5000/api/centro`, send_data, {
+        .post(`https://grupo20.proyecto2020.linti.unlp.edu.ar/api/centro`, send_data, {
           headers: {
             "Content-Type": "application/json",
           },

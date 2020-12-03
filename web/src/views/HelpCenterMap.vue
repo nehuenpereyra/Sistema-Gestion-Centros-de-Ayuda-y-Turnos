@@ -75,12 +75,12 @@ export default {
   methods: {
     fetchCenters() {
       axios
-        .get("http://127.0.0.1:5000/api/tipos_centros", {
+        .get("https://grupo20.proyecto2020.linti.unlp.edu.ar/api/tipos_centros", {
           params: { por_pagina: 0 },
         })
         .then((response) => {
           axios
-            .get("http://127.0.0.1:5000/api/centros", {
+            .get("https://grupo20.proyecto2020.linti.unlp.edu.ar/api/centros", {
               params: { por_pagina: response.data.total },
             })
             .then((response) => {
