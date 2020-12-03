@@ -107,7 +107,7 @@ export default {
     fetchTurns() {
       axios
         .get(
-          `https://grupo20.proyecto2020.linti.unlp.edu.ar/api/centros/${
+          `https://admin-grupo20.proyecto2020.linti.unlp.edu.ar/api/centros/${
             this.$route.params.center_id
           }/turnos_disponibles/?fecha=${this.changeFormat()}`
         )
@@ -140,7 +140,7 @@ export default {
 
       axios
         .post(
-          `https://grupo20.proyecto2020.linti.unlp.edu.ar/api/centros/${this.$route.params.center_id}/reserva`,
+          `https://admin-grupo20.proyecto2020.linti.unlp.edu.ar/api/centros/${this.$route.params.center_id}/reserva`,
           send_data,
           {
             headers: {

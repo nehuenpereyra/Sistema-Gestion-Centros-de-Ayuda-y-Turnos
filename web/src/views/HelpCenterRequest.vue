@@ -201,7 +201,7 @@ Icon.Default.mergeOptions({
 });
 
 const axiosApi = axios.create({
-  baseURL: "https://grupo20.proyecto2020.linti.unlp.edu.ar",
+  baseURL: "https://admin-grupo20.proyecto2020.linti.unlp.edu.ar",
   headers: { "Content-Type": "application/json" },
 });
 
@@ -309,7 +309,7 @@ export default {
       */
 
       axios
-        .post(`https://grupo20.proyecto2020.linti.unlp.edu.ar/api/centro`, send_data, {
+        .post(`https://admin-grupo20.proyecto2020.linti.unlp.edu.ar/api/centro`, send_data, {
           headers: {
             "Content-Type": "application/json",
           },
