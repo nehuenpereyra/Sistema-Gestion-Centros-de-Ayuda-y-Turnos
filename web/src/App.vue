@@ -1,8 +1,13 @@
 <template>
-  <div id="app" style="min-height: 100%">
-    <div style="overflow:auto;padding-bottom:150px;height:900px;">
+  <div>
+    <div style="height: 100%;">
       <navbar />
-      <router-view />
+      <div
+        class="container clear-top"
+        style="overflow: auto; padding-bottom: 150px"
+      >
+        <router-view />
+      </div>
     </div>
     <Footer />
   </div>
