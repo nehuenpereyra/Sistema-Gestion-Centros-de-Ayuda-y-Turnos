@@ -1,19 +1,11 @@
 <template>
   <footer
-      class="d-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center mt-auto"
-      style="
-        background-color: #3a6ba6;
-        position: relative;
-        clear: both;
-        margin-top: -150px;
-      "
-    >
-      <small
-        class="d-xl-flex justify-content-xl-center"
-        style="color: rgb(255, 255, 255)"
-        ><br />{{title}} © 2020 - Contacto: {{contact}}<br /><br
-      /></small>
-    </footer>
+      class="py-4 border-top"
+      style="background-color: #3a6ba6; position: absolute;bottom: 0;width: 100%;">
+      <small class="d-flex justify-content-center text-white">
+        {{title}} © 2020 - Contacto: {{contact}}
+      </small>
+  </footer>
 </template>
 
 <script>

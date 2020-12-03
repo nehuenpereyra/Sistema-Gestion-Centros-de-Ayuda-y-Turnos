@@ -1,6 +1,6 @@
 <template>
   <div id="app" style="min-height: 100%">
-    <div style="overflow:auto;padding-bottom:150px;height:900px;">
+    <div style="margin-bottom: 100px">
       <navbar />
       <router-view />
     </div>
