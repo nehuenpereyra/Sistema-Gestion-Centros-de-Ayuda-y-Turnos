@@ -6,6 +6,9 @@
             <div v-if="helpCenters == null">
                 Buscando centros de ayuda...
             </div>
+            <div v-else-if="helpCenters.length == 0">
+                No se encontraron centros de ayuda.
+            </div>
             <div v-else>
                 <ul class="list-group border rounded shadow-sm mt-3">
                     <li v-for="helpCenter of helpCenters" :key="helpCenter.id" class="list-group-item">
@@ -29,25 +32,32 @@
                         </div>
                     </li>
                 </ul>
-                <nav class="d-flex justify-content-center justify-content-sm-end mt-3">
-                    <ul class="pagination">
-                        <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                    </ul>
-                </nav>
+
+                <div class="d-flex justify-content-center justify-content-sm-end mt-3">
+                    <sliding-pagination
+                        :current="page.current"
+                        :total="page.total"
+                        @page-change="onChangePage"
+                        :slidingEndingSize="1"
+                        :classMap="{
+                        'list': 'pagination',
+                        'element': 'page-item',
+                        'elementDisabled': 'disabled',
+                        'elementActive': 'active',
+                        'page': 'page-link'
+                        }" />
+                </div>
+                
                 <help-center-detail-modal
                     id="helpCenterDetailModal"
-                    :helpCenter="currentHelpCenter"/>
+                    :helpCenter="currentHelpCenter"/>                
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import SlidingPagination from 'vue-sliding-pagination'
 import HelpCenterDetailModal from '../components/HelpCenterDetailModal.vue';
 
 const axios = require('axios');
@@ -58,22 +68,43 @@ const axiosApi = axios.create({
 });
 
 export default {
-    components: { HelpCenterDetailModal },
+    components: { 
+        SlidingPagination,
+        HelpCenterDetailModal
+    },
     name: "HelpCenterList",
     data() {
         return {
+            page: {
+                current: 1,
+                total: null
+            },
             helpCenters: null,
             currentHelpCenter: {}
         }
     },
     methods: {
+        onChangePage(selectedPage) {
+            this.page.current = selectedPage;
+            this.getHelpCenters();
+        },
         async getHelpCenters() {
-            
+
+            this.helpCenters = null;
+
             try {
 
-                const response = await axiosApi.get("/api/centros");
+                const response = await axiosApi.get("/api/centros", {
+                    params: {
+                        pagina: this.page.current
+                    }
+                });
 
                 this.helpCenters = response.data.centros;
+                this.page = {
+                    current: response.data.pagina,
+                    total: Math.ceil(response.data.total / response.data.por_pagina)
+                };
 
             } catch (error) {
                 
@@ -89,20 +120,12 @@ export default {
             this.currentHelpCenter = helpCenter;
         }
     },
-    computed: {
-        previousPage() {
-            return {
-                name: this.$route.name
-            }
-        }
-    },
     created() {
         this.getHelpCenters();
-        console.log(`pagina: ${this.$route.query.pagina}`);
     }
 }
 </script>
 
 <style>
-
+    
 </style>
