@@ -4,6 +4,9 @@
       <router-link class="navbar-brand text-white" to="/">
         {{ title }}
       </router-link>
+      <a class="text-white" href="https://admin-grupo20.proyecto2020.linti.unlp.edu.ar/iniciar_sesion" style="text-decoration: none">
+        Iniciar Sesión
+      </a>
     </div>
   </nav>
 </template>
