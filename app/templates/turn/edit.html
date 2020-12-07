@@ -12,7 +12,7 @@
   {% endif %}
 {% endmacro %}
 
-{% block title %}Solicitar Turno{% endblock %}
+{% block title %}Modificar Turno{% endblock %}
 
 {% block head %}
   {{ super() }}
@@ -22,9 +22,9 @@
 
     <h4 class="text-left mt-3"> 
         {% if id_turn != None %}
-            Editar turno
+            Editar turno del {{name_center}}
         {% else %}
-          Solicitar turno
+          Solicitar turno del {{name_center}}
         {% endif %} 
     </h4>
         <div class="shadow-sm mt-3 p-3">

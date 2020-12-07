@@ -4,7 +4,7 @@
   >
     <div v-if="center_status">
       <div
-        v-if="alert"
+        v-if="error_alert"
         class="alert alert-danger alert-dismissible fade show mt-2"
         role="alert"
       >
@@ -18,10 +18,19 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      
+      <div
+        v-if="succes_alert"
+        class="alert alert-success show mt-2"
+        role="alert"
+      >
+        Se reservo con éxito para el <strong>{{center_name}}</strong> un turno para el {{changeFormat(succes_date)}} en el horario de {{succes_time.time_init}} a{{succes_time.time_end}}.    
+      </div>
+
       <h4 class="text-left mt-4">Solicitar turno para el {{ center_name }}</h4>
       <div class="text-left">Los campos con (*) son obligatorios.</div>
       <div class="bg-white border rounded shadow-sm mt-3 p-3">
-        <form class="text-left user" method="post" @submit.prevent="postTurn">
+        <form class="text-left user" method="post" @submit.prevent="postTurn" name="turn_form">
           <div class="form-group row">
             <div class="col-sm-6 mb-3 mb-sm-0">
               <label>Email*</label
@@ -95,7 +104,10 @@ export default {
       date_request: new Date().toISOString().substring(0, 10),
       selected: "",
       turns: [],
-      alert: false,
+      error_alert: false,
+      succes_alert: false,
+      succes_date: null,
+      succes_time: null,
       center_name: "",
       center_status: false,
     };
@@ -109,7 +121,7 @@ export default {
         .get(
           `https://admin-grupo20.proyecto2020.linti.unlp.edu.ar/api/centros/${
             this.$route.params.center_id
-          }/turnos_disponibles/?fecha=${this.changeFormat()}`
+          }/turnos_disponibles/?fecha=${this.changeFormat(this.date_request)}`
         )
         .then((response) => {
           this.center_status = true;
@@ -127,7 +139,7 @@ export default {
         });
     },
     postTurn() {
-      this.alert = false;
+      this.error_alert = false;
       let send_data = {
         centro_id: Number(this.$route.params.center_id),
         email_donante: this.email,
@@ -150,15 +162,21 @@ export default {
         )
         .then((response) => {
           console.log(response);
-          this.$router.push({ name: "Home" });
+          this.succes_date = this.date_request;
+          this.succes_time = this.selected;
+          this.succes_alert = true;
+          document.turn_form.reset();
+          this.date_request = new Date().toISOString().substring(0, 10);
+          this.fetchTurns();
+          
         })
         .catch((error) => {
-          this.alert = true;
+          this.error_alert = true;
           this.error.push(error);
         });
     },
-    changeFormat() {
-      let fields = this.date_request.split("-");
+    changeFormat(data) {
+      let fields = data.split("-");
       return `${fields[2]}-${fields[1]}-${fields[0]}`;
     },
   },
