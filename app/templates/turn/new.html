@@ -12,7 +12,7 @@
   {% endif %}
 {% endmacro %}
 
-{% block title %}Solicitar Turno{% endblock %}
+{% block title %}Solicitar Turno {{name_center}}{% endblock %}
 
 {% block head %}
   {{ super() }}
@@ -20,7 +20,7 @@
 
 {% block sub_content %}
 
-    <h4 class="text-left mt-3">Solicitar turno</h4>
+    <h4 class="text-left mt-3">Solicitar turno del {{name_center}}</h4>
         <div class="shadow-sm mt-3 p-3">
             <form class="text-left user" action="{{ url_for('turn_create', id=center_id) }}" method="post" id="new_form" >
                 {{ form.csrf_token }}

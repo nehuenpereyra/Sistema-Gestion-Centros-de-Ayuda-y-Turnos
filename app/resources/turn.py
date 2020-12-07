@@ -59,7 +59,7 @@ def new(id):
     if not center:
         add_alert(Alert("danger", "El centro no existe."))
         return redirect(url_for("turn_center_index", id=id))
-    return render_template("turn/new.html", center_id=id, form=TurnForm())
+    return render_template("turn/new.html", center_id=id, form=TurnForm(), name_center= center.name)
 
 
 @login_required
@@ -83,7 +83,7 @@ def create(id):
             Alert("success", f"El turno con fecha {turn.day_hour.strftime('%Y/%m/%d-%H:%M:%S')} de {turn.email} se creo correctamente."))
         return redirect(url_for("turn_center_index", id=id))
 
-    return render_template("turn/new.html", center_id=id, form=form)
+    return render_template("turn/new.html", center_id=id, form=form, name_center= center.name)
 
 
 @login_required
@@ -104,7 +104,7 @@ def edit(id, id_turn):
         add_alert(Alert("danger", "El centro no tiene ese turno asignado."))
         return redirect(url_for("turn_center_index", id=id))
 
-    return render_template("turn/edit.html", id_center=id, id_turn=id_turn, form=TurnForm(obj=turn))
+    return render_template("turn/edit.html", id_center=id, id_turn=id_turn, form=TurnForm(obj=turn), name_center=center.name)
 
 
 @login_required
@@ -114,7 +114,7 @@ def update(id, id_turn):
     print(form.center_id.data)
 
     if not form.validate_on_submit():
-        return render_template("turn/edit.html", id_center=id, id_turn=id_turn, form=form)
+        return render_template("turn/edit.html", id_center=id, id_turn=id_turn, form=form, name_center= HelpCenter.query.get(id).name)
 
     turn = Turn.update(id_turn, id, form.email.data,
                        form.donor_phone_number.data, form.day_hour.data)
