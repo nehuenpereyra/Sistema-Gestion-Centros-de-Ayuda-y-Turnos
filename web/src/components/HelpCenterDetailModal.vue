@@ -45,10 +45,12 @@
                         <h6 class="mb-0">Correo electronico</h6>
                         <small class="ml-2">{{ helpCenter.email }}</small>
                     </div>
-                    <!-- <div class="mb-3">
+                    <div class="mb-3" v-if="helpCenter.protocolo">
                         <h6 class="mb-0">Protocolo de vista</h6>
-                        <small class="ml-2">No tiene</small>
-                    </div> -->
+                        <small class="ml-2">
+                            <a :href="`http://localhost:5000/${helpCenter.protocolo}`">Protocolo</a>
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>

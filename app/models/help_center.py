@@ -9,7 +9,7 @@ from app.db import db
 
 from app.models.help_center_type import HelpCenterType
 from app.models.town import Town
-#from app.models.turn import Turn
+# from app.models.turn import Turn
 
 
 class HelpCenter(db.Model):
@@ -58,22 +58,8 @@ class HelpCenter(db.Model):
         self.turns = []
 
     def public_dict(self):
-        if self.latitude:
-            return {
-                "id": self.id,
-                "nombre": self.name,
-                "direccion": self.address,
-                "telefono": self.phone_number,
-                "hora_apertura": self.opening_time.strftime("%H:%M"),
-                "hora_cierre": self.closing_time.strftime("%H:%M"),
-                "tipo": self.center_type.name,
-                "municipio": self.town.name,
-                "web": self.web_url,
-                "email": self.email,
-                "latitude": self.latitude,
-                "longitude": self.longitude,
-            }
-        return {
+
+        result = {
             "id": self.id,
             "nombre": self.name,
             "direccion": self.address,
@@ -81,10 +67,26 @@ class HelpCenter(db.Model):
             "hora_apertura": self.opening_time.strftime("%H:%M"),
             "hora_cierre": self.closing_time.strftime("%H:%M"),
             "tipo": self.center_type.name,
-            "municipio": self.town.name,
-            "web": self.web_url,
-            "email": self.email
+            "municipio": self.town.name
         }
+
+        if self.web_url:
+            result["web"] = self.web_url
+
+        if self.email:
+            result["email"] = self.email
+
+        if self.has_view_protocol:
+            result["protocolo"] = self.get_view_protocol_path() \
+                .replace("app/", "")
+
+        if self.latitude:
+            result["latitude"] = self.latitude
+
+        if self.longitude:
+            result["longitude"] = self.longitude
+
+        return result
 
     def save(self):
         if not self.id:
@@ -183,9 +185,13 @@ class HelpCenter(db.Model):
         return HelpCenter.query.filter_by(request_status=True, published=True, id=id).first()
 
     @staticmethod
-    def all_published(page=1, per_page=None):
+    def all_published(page=1, per_page=None, search_query=None):
         query = HelpCenter.query.filter_by(request_status=True, published=True)
-        return query.paginate(page=page, per_page=per_page, error_out=False).items, query.count()
+
+        if search_query:
+            query = query.filter(HelpCenter.name.like(f"%{search_query}%"))
+
+        return query.order_by(HelpCenter.name).paginate(page=page, per_page=per_page, error_out=False).items, query.count()
 
     @staticmethod
     def delete(id):
@@ -212,4 +218,5 @@ class HelpCenter(db.Model):
             else:
                 query = query.filter_by(request_status=None)
 
-        return query.paginate(page=page, per_page=per_page, error_out=False)
+        return query.order_by(HelpCenter.name) \
+            .paginate(page=page, per_page=per_page, error_out=False)
