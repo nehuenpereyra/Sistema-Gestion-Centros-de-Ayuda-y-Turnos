@@ -48,7 +48,7 @@
                     <div class="mb-3" v-if="helpCenter.protocolo">
                         <h6 class="mb-0">Protocolo de vista</h6>
                         <small class="ml-2">
-                            <a :href="`http://localhost:5000/${helpCenter.protocolo}`">Protocolo</a>
+                            <a :href="`https://admin-grupo20.proyecto2020.linti.unlp.edu.ar/${helpCenter.protocolo}`">Protocolo</a>
                         </small>
                     </div>
                 </div>

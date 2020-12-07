@@ -74,7 +74,7 @@ const axios = require('axios');
         
 const axiosApi = axios.create({
     //baseURL: "https://admin-grupo20.proyecto2020.linti.unlp.edu.ar",
-    baseURL: "http://localhost:5000",
+    baseURL: "https://admin-grupo20.proyecto2020.linti.unlp.edu.ar",
     headers: { "Content-Type": "application/json" }
 });
 
