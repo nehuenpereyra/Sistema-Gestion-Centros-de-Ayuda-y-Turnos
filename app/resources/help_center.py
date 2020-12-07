@@ -126,7 +126,8 @@ def show(id):
         add_alert(Alert("danger", "El centro de ayuda no existe."))
         return redirect(url_for("help_center_index"))
 
-    return render_template("help_center/show.html", help_center=help_center, alert=get_alert())
+    return render_template("help_center/show.html", help_center=help_center, alert=get_alert(),
+                           view_protocol_filename=f"uploads/protocolos/{ help_center.get_view_protocol_filename() }")
 
 
 @ login_required

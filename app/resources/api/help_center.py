@@ -21,13 +21,15 @@ def default_json(default=str):
 
 def index():
     page = int(request.args.get("pagina", 1))
-    per_page = int(request.args.get("por_pagina", Configuration.get().pagination_elements))
+    per_page = int(request.args.get(
+        "por_pagina", Configuration.get().pagination_elements))
+    search_query = request.args.get("search_query", None)
 
     if page < 1 or per_page < 0:
         abort(400)
 
     help_centers, total = HelpCenter.all_published(
-        page=page, per_page=per_page)
+        page=page, per_page=per_page, search_query=search_query)
 
     help_center_schema = {
         "centros": help_centers.collect(lambda each: each.public_dict()),

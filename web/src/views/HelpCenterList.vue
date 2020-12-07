@@ -2,7 +2,17 @@
     <div class="HelpCenterList">
         <div class="container my-4">
             <h5 class="mt-3">Centros de Ayuda</h5>
-
+            <form class="my-3 p-2" @submit.prevent="searchHelpCenters">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Nombre</span>
+                    </div>
+                    <input class="form-control" type="text" v-model="search_query">
+                    <div class="input-group-append d-none d-sm-inline">
+                        <button class="btn btn-primary" type="submit">Buscar</button>
+                    </div>
+                </div>
+            </form>
             <div v-if="helpCenters == null">
                 Buscando centros de ayuda...
             </div>
@@ -10,7 +20,7 @@
                 No se encontraron centros de ayuda.
             </div>
             <div v-else>
-                <ul class="list-group border rounded shadow-sm mt-3">
+                <ul class="list-group border rounded shadow-sm">
                     <li v-for="helpCenter of helpCenters" :key="helpCenter.id" class="list-group-item">
                         <div class="row d-flex">
                             <div class="col-12 d-flex justify-content-center justify-content-sm-start col-sm mb-2 mb-sm-0">
@@ -63,6 +73,7 @@ import HelpCenterDetailModal from '../components/HelpCenterDetailModal.vue';
 const axios = require('axios');
         
 const axiosApi = axios.create({
+    //baseURL: "https://admin-grupo20.proyecto2020.linti.unlp.edu.ar",
     baseURL: "https://admin-grupo20.proyecto2020.linti.unlp.edu.ar",
     headers: { "Content-Type": "application/json" }
 });
@@ -80,12 +91,17 @@ export default {
                 total: null
             },
             helpCenters: null,
-            currentHelpCenter: {}
+            currentHelpCenter: {},
+            search_query: ""
         }
     },
     methods: {
         onChangePage(selectedPage) {
             this.page.current = selectedPage;
+            this.getHelpCenters();
+        },
+        searchHelpCenters() {
+            this.page.current = 1;
             this.getHelpCenters();
         },
         async getHelpCenters() {
@@ -96,7 +112,8 @@ export default {
 
                 const response = await axiosApi.get("/api/centros", {
                     params: {
-                        pagina: this.page.current
+                        pagina: this.page.current,
+                        search_query: this.search_query
                     }
                 });
 
