@@ -67,7 +67,8 @@ class HelpCenter(db.Model):
             "hora_apertura": self.opening_time.strftime("%H:%M"),
             "hora_cierre": self.closing_time.strftime("%H:%M"),
             "tipo": self.center_type.name,
-            "municipio": self.town.name
+            "municipio": self.town.name,
+            "cantidad_turnos": self.turns.size()
         }
 
         if self.web_url:

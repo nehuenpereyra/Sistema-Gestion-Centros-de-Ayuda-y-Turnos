@@ -11,7 +11,8 @@ class HelpCenterType(db.Model):
     def public_dict(self):
         return {
             "id": self.id,
-            "nombre": self.name
+            "nombre": self.name,
+            "cantidad_centros": self.help_centers.size()
         }
 
     @staticmethod
