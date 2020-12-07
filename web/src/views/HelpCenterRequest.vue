@@ -4,21 +4,22 @@
     style="
       /*overflow: auto;*/ /*padding-bottom: 150px;*/ /*background: white;*/
     "
-  ><div
-        v-if="alert"
-        class="alert alert-danger alert-dismissible fade show mt-2"
-        role="alert"
+  >
+    <div
+      v-if="alert"
+      class="alert alert-danger alert-dismissible fade show mt-2"
+      role="alert"
+    >
+      Hubo un <strong>error</strong> en la solicitud del turno
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
       >
-        Hubo un <strong>error</strong> en la solicitud del turno
-        <button
-          type="button"
-          class="close"
-          data-dismiss="alert"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <h5 class="mt-3">Solicitar Centro</h5>
     <div class="text-left">Los campos con (*) son obligatorios.</div>
     <div class="bg-white border rounded shadow-sm mt-3 p-3">
@@ -175,13 +176,39 @@
             style="height: 100%"
           >
             <l-tile-layer :url="url" />
-            <l-marker  v-if="marker" :key="marker.lat" :lat-lng="marker"> </l-marker>
+            <l-marker v-if="marker" :key="marker.lat" :lat-lng="marker">
+            </l-marker>
           </l-map>
         </div>
-        <div class="d-flex justify-content-center justify-content-sm-end">
-          <button class="btn btn-primary mt-3" type="submit">
-            Enviar Solicitud
-          </button>
+        <div class="form-row">
+          <div class="col-12 col-sm-6">
+            <div class="mt-3">
+            <vue-recaptcha
+              ref="recaptcha"
+              @verify="onVerify"
+              @expired="onExpired"
+              :sitekey="'6LcWUP0ZAAAAAInBJU1Z0xDUKsaSpuvnaQvD03QW'"
+            >
+            </vue-recaptcha>
+            <button @click="resetRecaptcha">Reset ReCAPTCHA</button>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6">
+            <div
+              class="d-flex justify-content-center justify-content-sm-end mt-3"
+            >
+              <div v-if="loadRecaptchaScript">
+                <button class="btn btn-primary p-4 mr-2" type="submit">
+                  Enviar Solicitud
+                </button>
+              </div>
+              <div v-else>
+                <button class="btn btn-primary p-4 mr-2" type="submit" disabled>
+                  Enviar Solicitud
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </form>
     </div>
@@ -191,6 +218,7 @@
 <script>
 import { latLngBounds, Icon, latLng } from "leaflet";
 import { LMap, LTileLayer, LMarker } from "vue2-leaflet";
+import VueRecaptcha from "vue-recaptcha";
 const axios = require("axios");
 
 delete Icon.Default.prototype._getIconUrl;
@@ -215,9 +243,11 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
+    VueRecaptcha,
   },
   data() {
     return {
+      loadRecaptchaScript: false,
       name: "",
       address: "",
       phone: "",
@@ -245,6 +275,21 @@ export default {
     };
   },
   methods: {
+    onSubmit: function () {
+      this.$refs.invisibleRecaptcha.execute();
+    },
+    onVerify: function (response) {
+      console.log("Verify: " + response);
+      this.loadRecaptchaScript = true;
+    },
+    onExpired: function () {
+      console.log("Expired");
+      this.loadRecaptchaScript = false;
+    },
+    resetRecaptcha() {
+      this.$refs.recaptcha.reset();
+      this.loadRecaptchaScript = false;
+    },
     addMarker(event) {
       this.marker = event.latlng;
     },
@@ -279,7 +324,7 @@ export default {
       }
     },
     async submit() {
-    this.alert = false;
+      this.alert = false;
       let send_data = {
         nombre: this.name,
         direccion: this.address,
@@ -309,11 +354,15 @@ export default {
       */
 
       axios
-        .post(`https://admin-grupo20.proyecto2020.linti.unlp.edu.ar/api/centro`, send_data, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
+        .post(
+          `https://admin-grupo20.proyecto2020.linti.unlp.edu.ar/api/centro`,
+          send_data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
         .then((response) => {
           console.log(response);
           this.$router.push({ name: "Home" });
