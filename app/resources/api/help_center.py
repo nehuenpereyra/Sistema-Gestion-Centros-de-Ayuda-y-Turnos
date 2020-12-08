@@ -80,3 +80,19 @@ def create():
                                     in form.data.items() if value is not None}}
 
     return json.dumps(success_schema, default=default_json()), {"Content-Type": "application/json"}
+
+
+def more_turns():
+    quantity = int(request.args.get("cantidad", 10))
+
+    if quantity < 1:
+        abort(400)
+
+    help_centers = HelpCenter.get_with_more_turns(quantity)
+
+    help_center_schema = {
+        "centros": help_centers.collect(lambda each: each.public_dict()),
+        "cantidad": help_centers.size()
+    }
+
+    return json.jsonify(**help_center_schema)

@@ -28,3 +28,5 @@ def set_routes(app):
                      "api_help_center_show", api_help_center.show)
     app.add_url_rule("/api/centro", "api_help_center_create",
                      api_help_center.create, methods=["POST"])
+    app.add_url_rule("/api/centros/mas_turnos", "api_help_center_more_turns",
+                     api_help_center.more_turns)

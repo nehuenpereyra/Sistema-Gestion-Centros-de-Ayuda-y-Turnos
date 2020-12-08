@@ -1,6 +1,6 @@
 
 <script>
-import { Doughnut, mixins } from 'vue-chartjs'
+import { Bar, mixins } from 'vue-chartjs'
 const { reactiveData } = mixins
 
 const axios = require('axios');
@@ -10,21 +10,32 @@ const axiosApi = axios.create({
 });
 
 export default {
-    name: "HelpCentersTypesChart",
-    extends: Doughnut,
+    name: "TurnsQuantityChart",
+    extends: Bar,
     mixins: [reactiveData],
+    data() {
+        return {
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [
+                        {
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    ],
+                }
+            }
+        }
+    },
     methods: {
-        async fetchHelpCentersTypes() {
-            
+        async fetchQuantityTurnsPerHelpCenter() {
             try {
 
-                const firstResponse = await axiosApi.get("/api/tipos_centros", {
-                    params: { por_pagina: 0 },
-                });
-
-                const response = await axiosApi.get("/api/tipos_centros", {
-                    params: { por_pagina: firstResponse.data.total },
-                });
+                const response = await axiosApi.get("/api/centros/mas_turnos");
 
                 this.chartData = {
                     labels: [],
@@ -36,9 +47,9 @@ export default {
                     ]
                 }
 
-                response.data.datos.forEach((each) => {
+                response.data.centros.forEach((each) => {
                     this.chartData.labels.push(each.nombre);
-                    this.chartData.datasets[0].data.push(each.cantidad_centros);
+                    this.chartData.datasets[0].data.push(each.cantidad_turnos);
                     this.chartData.datasets[0].backgroundColor.push(this.randomColor());
                 });
             
@@ -54,7 +65,7 @@ export default {
         }
     },
     created() {
-        this.fetchHelpCentersTypes();
+        this.fetchQuantityTurnsPerHelpCenter();
     },
     mounted () {
         this.renderChart(this.chartData, this.options)

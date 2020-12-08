@@ -4,6 +4,7 @@ import shutil
 import phonenumbers
 
 from flask import current_app
+from sqlalchemy import func, desc
 
 from app.db import db
 
@@ -193,6 +194,17 @@ class HelpCenter(db.Model):
             query = query.filter(HelpCenter.name.like(f"%{search_query}%"))
 
         return query.order_by(HelpCenter.name).paginate(page=page, per_page=per_page, error_out=False).items, query.count()
+
+    @staticmethod
+    def get_with_more_turns(limit):
+        Turn = HelpCenter.turns.property.mapper.class_
+
+        return db.session.query(HelpCenter, func.count(Turn.help_center_id).label('turns_quantity')) \
+            .join(Turn, isouter=True) \
+            .group_by(HelpCenter.id) \
+            .order_by(desc('turns_quantity')) \
+            .limit(limit) \
+            .all().collect(lambda each: each[0])
 
     @staticmethod
     def delete(id):
