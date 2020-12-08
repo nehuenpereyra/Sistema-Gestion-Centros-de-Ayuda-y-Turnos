@@ -48,7 +48,6 @@ def center_index(id):
     turns = Turn.search(id_center=id, email=search_form.email.data, page=int(request.args.get('page', 1)),
                         per_page=Configuration.query.first().pagination_elements)
 
-    print("Llego")
     return render_template("turn/center_index.html", id_center=id, turns=turns, alert=get_alert(), name_center=center.name, search_form=search_form)
 
 
@@ -145,6 +144,9 @@ def delete(id, id_turn):
         add_alert(Alert("danger", "El turno no existe."))
 
     return redirect(url_for("turn_center_index", id=id))
+
+def quantity_turns_last():
+    return jsonify(Turn.get_quantity_turns_last())
 
 
 def free_time(id):

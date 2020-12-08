@@ -128,3 +128,18 @@ class Turn(db.Model):
     def get_all_emails():
         return Turn.query.with_entities(Turn.email).distinct().all().collect(
             lambda each: each[0])
+
+    @staticmethod
+    def get_quantity_turns_last(total_days=7):
+        array_json = []
+        query = Turn.query
+        today = datetime.today() - timedelta(total_days)
+
+        for x in range(total_days):
+            today = today + timedelta(days=1)
+            array_json.append({
+                'fecha': today.strftime("%d/%m/%Y"),
+                'cantidad': query.filter((cast(Turn.day_hour, Date) == today.date())).all().size(),
+            })
+
+        return array_json
