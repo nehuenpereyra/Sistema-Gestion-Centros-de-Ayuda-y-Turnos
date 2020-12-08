@@ -18,8 +18,7 @@
                         <h6 class="text-primary font-weight-bold m-0">Tipos de centros más solicitados</h6>
                     </div>
                     <div class="card-body">
-                        <div class="chart-area"><canvas data-bs-chart="{&quot;type&quot;:&quot;doughnut&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Direct&quot;,&quot;Social&quot;,&quot;Referral&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;&quot;,&quot;backgroundColor&quot;:[&quot;#4e73df&quot;,&quot;#1cc88a&quot;,&quot;#36b9cc&quot;],&quot;borderColor&quot;:[&quot;#ffffff&quot;,&quot;#ffffff&quot;,&quot;#ffffff&quot;],&quot;data&quot;:[&quot;50&quot;,&quot;30&quot;,&quot;15&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:false,&quot;legend&quot;:{&quot;display&quot;:false},&quot;title&quot;:{}}}"></canvas></div>
-                        <div class="text-center small mt-4"><span class="mr-2"><i class="fas fa-circle text-primary"></i>&nbsp;Direct</span><span class="mr-2"><i class="fas fa-circle text-success"></i>&nbsp;Social</span><span class="mr-2"><i class="fas fa-circle text-info"></i>&nbsp;Refferal</span></div>
+                        <help-centers-types-chart />
                     </div>
                 </div>
           </div>
@@ -59,8 +58,11 @@
 </template>
 
 <script>
+import HelpCentersTypesChart from '../components/HelpCentersTypesChart.vue';
 export default {
-  name: "Statistics",
-  components: {}
+    name: "Statistics",
+    components: {
+        HelpCentersTypesChart
+    }
 };
 </script>
