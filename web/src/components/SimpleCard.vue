@@ -1,6 +1,6 @@
 <template>
     <router-link :to="link" style="color: inherit; text-decoration: inherit;">
-        <div class="card shadow-sm text-center h-100" style="max-width: 280px;">
+        <div class="card shadow-sm text-center h-100" style="max-width: 220px;">
             <i :class="icon" class="my-4" style="font-size: 60px;color: #3a6ba6;"></i>
             <div class="card-body">
                 <h5 class="card-title" style="font-weight: bold">{{ title }}</h5>

@@ -9,7 +9,7 @@
           </p>
         </div>
         <div class="row">
-          <div class="col-md-4 d-flex justify-content-center mb-3">
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center mb-3">
             <simple-card
               title="Buscar Centro"
               description="Buscar en un mapa los centros de ayuda disponibles"
@@ -17,7 +17,7 @@
               link="/centros/mapa"
             />
           </div>
-          <div class="col-md-4 d-flex justify-content-center mb-3">
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center mb-3">
             <simple-card
               title="Solicitar Turno"
               description="Solicitar un turno de atención para uno de los centros de ayuda disponibles"
@@ -25,12 +25,20 @@
               link="/centros"
             />
           </div>
-          <div class="col-md-4 d-flex justify-content-center mb-3">
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center mb-3">
             <simple-card
               title="Solicitar Centro"
               description="Solicitar la creación de un nuevo centro de ayuda"
               icon="fas fa-plus-circle"
               link="/centro/solicitud"
+            />
+          </div>
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center mb-3">
+            <simple-card
+              title="Estadísticas"
+              description="Vér estadísticas de los centros de ayuda"
+              icon="fas fa-chart-bar"
+              link="/estadisticas"
             />
           </div>
         </div>
