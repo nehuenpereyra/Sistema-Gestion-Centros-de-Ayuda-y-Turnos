@@ -165,7 +165,9 @@ export default {
           this.succes_date = this.date_request;
           this.succes_time = this.selected;
           this.succes_alert = true;
-          document.turn_form.reset();
+          this.email = "";
+          this.telephone = "";
+          this.turns = [];
           this.date_request = new Date().toISOString().substring(0, 10);
           this.fetchTurns();
           
