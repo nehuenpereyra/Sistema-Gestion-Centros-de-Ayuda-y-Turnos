@@ -19,11 +19,18 @@
             :lat-lng="item.location"
           >
             <l-popup>
-              <div>
-                <h3>{{ item.name }}</h3>
-                <div>Dirección: {{ item.direction }}</div>
-                <div>Horario: {{ item.schedule }}</div>
-                <div>Telefono: {{ item.telephone }}</div>
+              <div container py-4>
+                <div class="row">
+                  <h3>{{ item.name }}</h3>
+                  <div>Dirección: {{ item.direction }}</div>
+                  <div>Horario: {{ item.schedule }}</div>
+                  <div>Telefono: {{ item.telephone }}</div>
+                </div>
+                <div class="row justify-content-center mt-2">
+                  <router-link :to="`/centros/${item.id}/reserva`" class="btn btn-primary btn-sm mr-1 active">
+                    Reservar turno
+                  </router-link>
+                </div>
               </div>
             </l-popup>
           </l-marker>
@@ -87,6 +94,7 @@ export default {
               response.data.centros.forEach((item) => {
                 if (item.latitude != null)
                   this.markers.push({
+                    id: item.id,
                     name: item.nombre,
                     direction: item.direccion,
                     telephone: item.telefono,
