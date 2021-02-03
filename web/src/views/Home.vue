@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <div class="container py-4">
+      <alert v-if="this.alert" :type="this.alert.type" :message="this.alert.message" />
       <div class="text-center py-2">
         <h2 class="text-dark mb-4">{{ config.titulo }}</h2>
         <div class="d-flex justify-content-center">
@@ -49,12 +50,14 @@
 
 <script>
 import SimpleCard from "@/components/SimpleCard.vue";
+import Alert from "@/components/Alert.vue"
 const axios = require("axios");
 
 export default {
   name: "Home",
   components: {
     SimpleCard,
+    Alert
   },
   data() {
     return {
@@ -65,6 +68,7 @@ export default {
         estado_sitio: true,
         titulo: "Donaciones covid 19",
       },
+      alert: this.$route.params.alert
     };
   },
   created() {

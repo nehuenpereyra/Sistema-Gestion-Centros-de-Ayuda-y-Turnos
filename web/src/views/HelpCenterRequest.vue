@@ -10,7 +10,7 @@
       class="alert alert-danger alert-dismissible fade show mt-2"
       role="alert"
     >
-      Hubo un <strong>error</strong> en la solicitud del turno
+      Hubo un <strong>error</strong> en la solicitud del centro de ayuda
       <button
         type="button"
         class="close"
@@ -365,11 +365,18 @@ export default {
         )
         .then((response) => {
           console.log(response);
-          this.$router.push({ name: "Home" });
+          this.$router.push({
+            name: "Home",
+            params: {
+              alert: {
+                type: "success",
+                message: `El centro de ayuda "${this.name}" fue solicitado con exito`
+              }
+            }
+          });
         })
-        .catch((error) => {
+        .catch(() => {
           this.alert = true;
-          this.error.push(error);
         });
     },
   },

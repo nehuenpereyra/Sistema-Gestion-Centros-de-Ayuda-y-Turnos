@@ -55,3 +55,8 @@ class HelpCenterApiForm(FlaskForm):
         self.tipo.choices = HelpCenterType.query.all() \
             .collect(lambda each: (each.name, each.name))
         self.municipio.choices = Town.all().collect(lambda each: (each.name, each.name))
+
+    def validate_hora_apertura(form, field):
+        if form.hora_cierre.data:
+            if field.data >= form.hora_cierre.data:
+                raise ValidationError('La hora de apertura debe ser menor a la hora de cierre.')
