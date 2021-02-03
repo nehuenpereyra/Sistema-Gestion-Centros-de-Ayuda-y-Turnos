@@ -18,8 +18,8 @@ class DatabaseInitializer(Seeder):
     def run(self):
         print("[DatabaseInitializer]")
 
-        shutil.rmtree(current_app.config["UPLOAD_FOLDER"])
-        os.makedirs(current_app.config["UPLOAD_FOLDER"])
+        # shutil.rmtree(current_app.config["UPLOAD_FOLDER"])
+        # os.makedirs(current_app.config["UPLOAD_FOLDER"])
         print(f" - upload folder restarted")
 
         db.drop_all()

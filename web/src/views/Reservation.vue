@@ -33,6 +33,30 @@
         <form class="text-left user" method="post" @submit.prevent="postTurn" name="turn_form">
           <div class="form-group row">
             <div class="col-sm-6 mb-3 mb-sm-0">
+              <label>Nombre*</label
+              ><input
+                class="form-control"
+                type="text"
+                placeholder="nombre"
+                name="name"
+                required
+                v-model="name"
+              />
+            </div>
+            <div class="col-sm-6">
+              <label>Apellido*</label
+              ><input
+                class="form-control"
+                type="text"
+                placeholder="apellido"
+                name="surname"
+                required
+                v-model="surname"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-6 mb-3 mb-sm-0">
               <label>Email*</label
               ><input
                 class="form-control"
@@ -101,6 +125,8 @@ export default {
     return {
       email: "",
       telephone: "",
+      name: "",
+      surname: "",
       date_request: new Date().toISOString().substring(0, 10),
       selected: "",
       turns: [],
@@ -146,6 +172,8 @@ export default {
         hora_inicio: this.selected.time_init,
         hora_fin: this.selected.time_end,
         fecha: this.date_request,
+        nombre: this.name,
+        apellido: this.surname
       };
 
       if (this.telephone != "") send_data["telefono_donante"] = this.telephone;
@@ -167,6 +195,8 @@ export default {
           this.succes_alert = true;
           this.email = "";
           this.telephone = "";
+          this.name = "";
+          this.surname = "";
           this.turns = [];
           this.date_request = new Date().toISOString().substring(0, 10);
           this.fetchTurns();

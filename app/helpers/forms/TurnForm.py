@@ -70,6 +70,9 @@ class TurnForm(SpanishForm):
     center_id = IntegerField(widget=HiddenInput(), default=0)
     email = EmailField('Correo Electrónico',
                        validators=[DataRequired(), Email()])
+    name = StringField('Nombre', validators=[Length(max=32)])
+    surname = StringField('Apellido',
+                          validators=[Length(max=32)])
     donor_phone_number = StringField(
         'Telefono del donante', validators=[Optional(), Length(max=90), valid_number()])
     day_hour = DateTimeLocalField('Fecha y hora del turno',  format='%Y-%m-%dT%H:%M',
