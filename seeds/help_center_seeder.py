@@ -101,7 +101,7 @@ class HelpCenterSeeder(Seeder):
         print(f" - {turn_two.id} OK")
 
         turn_three = Turn(email="julieta@gmail.com",
-                          day_hour=datetime(2020, 11, 13, 15, 30, 00), donor_phone_number="2214053283", help_center=food_center_2)
+                          day_hour=datetime(2021, 2, 4, 9, 30, 00), donor_phone_number="2214053283", help_center=food_center_2, name="Julieta", surname="Filpin")
         turn_three.save()
         print(f" - {turn_three.id} OK")
 

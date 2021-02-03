@@ -58,7 +58,7 @@ def new(id):
     if not center:
         add_alert(Alert("danger", "El centro no existe."))
         return redirect(url_for("turn_center_index", id=id))
-    return render_template("turn/new.html", center_id=id, form=TurnForm(), name_center= center.name)
+    return render_template("turn/new.html", center_id=id, form=TurnForm(), name_center=center.name)
 
 
 @login_required
@@ -82,7 +82,7 @@ def create(id):
             Alert("success", f"El turno con fecha {turn.day_hour.strftime('%Y/%m/%d-%H:%M:%S')} de {turn.email} se creo correctamente."))
         return redirect(url_for("turn_center_index", id=id))
 
-    return render_template("turn/new.html", center_id=id, form=form, name_center= center.name)
+    return render_template("turn/new.html", center_id=id, form=form, name_center=center.name)
 
 
 @login_required
@@ -113,7 +113,7 @@ def update(id, id_turn):
     print(form.center_id.data)
 
     if not form.validate_on_submit():
-        return render_template("turn/edit.html", id_center=id, id_turn=id_turn, form=form, name_center= HelpCenter.query.get(id).name)
+        return render_template("turn/edit.html", id_center=id, id_turn=id_turn, form=form, name_center=HelpCenter.query.get(id).name)
 
     turn = Turn.update(id_turn, id, form.email.data,
                        form.donor_phone_number.data, form.day_hour.data)
@@ -144,6 +144,7 @@ def delete(id, id_turn):
         add_alert(Alert("danger", "El turno no existe."))
 
     return redirect(url_for("turn_center_index", id=id))
+
 
 def quantity_turns_last():
     return jsonify(Turn.get_quantity_turns_last())
@@ -210,14 +211,18 @@ def reserved(id):
         # Se crea uns instancia del formulario con los datos recibidos
         form = TurnForm(id=None, day_hour=data_time_init,
                         center_id=id, email=data['email_donante'],
-                        donor_phone_number=donor_phone_number, meta={'csrf': False})
+                        donor_phone_number=donor_phone_number, meta={
+                            'csrf': False},
+                        name=data['nombre'], surname=data['apellido'])
 
         # Se validan los datos recibidos
         if form.validate_on_submit():
             Turn(help_center=center,
                  email=form.email.data,
                  donor_phone_number=form.donor_phone_number.data,
-                 day_hour=form.day_hour.data).save()
+                 day_hour=form.day_hour.data,
+                 name=form.name.data,
+                 surname=form.surname.data).save()
 
             # Respuesta que se le entrega al cliente
             # Si envia campos demas no seran utilizados en la respuesta
@@ -228,7 +233,9 @@ def reserved(id):
                     "email_donante": data["email_donante"],
                     "hora_inicio": data["hora_inicio"],
                     "hora_fin": data["hora_fin"],
-                    "fecha": data["fecha"]
+                    "fecha": data["fecha"],
+                    "nombre": data["nombre"],
+                    "apellido": data["apellido"]
                 }
             }
             if 'telefono_donante' in data:

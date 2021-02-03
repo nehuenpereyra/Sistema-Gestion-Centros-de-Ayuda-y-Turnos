@@ -12,6 +12,8 @@ class Turn(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(32), nullable=False)
     day_hour = db.Column(db.DateTime, nullable=False, unique=False)
+    name = db.Column(db.String(32), nullable=True)
+    surname = db.Column(db.String(32), nullable=True)
     _donor_phone_number = db.Column(
         "donor_phone_number", db.String(16), nullable=True)
     help_center = db.relationship(

@@ -47,11 +47,14 @@
                     <div class="row d-flex">
                         <div class="col-12 d-flex justify-content-center justify-content-sm-start col-sm mb-2 mb-sm-0">
                             <div class="text-center text-sm-left">
-                            <span class="d-block">{{ turn.day_hour.strftime("%d/%m/%Y, %H:%M:%S")}}</span>
-                                <span class="d-block">{{ turn.email }}</span>
-                                {% if turn.donor_phone_number %}
-                                    <small>{{ turn.donor_phone_number }}</small>
-                                {% endif %}
+                                <span class="d-block">{{ turn.day_hour.strftime("%d/%m/%Y, %H:%M:%S")}}</span>
+                                    {% if turn.name and turn.surname %}
+                                        <span class="d-block">  {{ turn.name }} {{ turn.surname}}</span>
+                                    {% endif %}
+                                    <span class="d-block">{{ turn.email }}</span>
+                                    {% if turn.donor_phone_number %}
+                                        <small>{{ turn.donor_phone_number }}</small>
+                                    {% endif %}
                             </div>
                             
                         </div>

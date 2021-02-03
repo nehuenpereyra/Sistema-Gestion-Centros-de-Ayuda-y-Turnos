@@ -325,6 +325,8 @@ _En el modelo se agrego un metodo llamado `all_free_time_json` el cual retorna u
 
 - `centro_id*`
 - `email_donante*`
+- `nombre*`
+- `apellido*`
 - `telefono_donante`
 - `hora_inicio*`
 - `hora_fin*`
@@ -342,6 +344,8 @@ Cuerpo de la solicitud
 {
   "centro_id": 2,
   "email_donante": "juan.perez@gmail.com",
+  "nombre": "Juan",
+  "apellido": "Perez",
   "telefono_donante": "221 - 5930941",
   "hora_inicio": "11:00",
   "hora_fin": "11:30",
@@ -356,6 +360,8 @@ Cuerpo de la respuesta
   "atributos": {
     "centro_id": 2,
     "email_donante": "juan.perez@gmail.com",
+    "nombre": "Juan",
+    "apellido": "Perez",
     "fecha": "2020-11-13",
     "hora_fin": "11:30",
     "hora_inicio": "11:00",
