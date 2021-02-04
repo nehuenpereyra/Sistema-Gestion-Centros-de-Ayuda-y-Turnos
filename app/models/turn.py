@@ -30,6 +30,8 @@ class Turn(db.Model):
         if phone:
             self._donor_phone_number = phonenumbers.format_number(
                 phonenumbers.parse(phone, "AR"), phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        if phone == "":
+            self._donor_phone_number = ""
 
     def save(self):
         if not self.id:
