@@ -9,10 +9,17 @@ import json
 
 
 def quantity_turns_last():
+    """Returns a json with the number of shifts reserved in a week for each day. 
+    """
     return jsonify(Turn.get_quantity_turns_last())
 
 
 def free_time(id):
+    """Returns a json with the times of the available shifts.
+
+    Keyword arguments:
+    id -- integer help center id  
+    """
 
     # Se comprueba que el centro exista
     center = HelpCenter.query.get(id)
@@ -41,6 +48,12 @@ def free_time(id):
 
 
 def reserved(id):
+    """Allows you to book an appointment for a help center
+    Returns a json with the data sent for the reservation or if the reservation could not be made an about 400. 
+
+    Keyword arguments:
+    id -- integer help center id  
+    """
 
     data = request.json
     print(request.json)
