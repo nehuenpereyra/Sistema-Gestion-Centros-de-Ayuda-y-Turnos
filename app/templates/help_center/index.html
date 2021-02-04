@@ -59,9 +59,17 @@
                                 <i class="fas fa-cog"></i>
                             </a>
                             {% if verify_permission('help_center_delete') %}
-                                <a onclick="return confirm('¿Seguro que deseas eliminar el centro de ayuda {{ help_center.name }}?');" class="btn btn-danger btn-sm" role="button" href="{{ url_for('help_center_delete', id=help_center.id) }}">
-                                    <i class="far fa-trash-alt"></i>
-                                </a>
+                                {% if not help_center.has_pending_turns() %}
+                                    <a onclick="return confirm('¿Seguro que deseas eliminar el centro de ayuda {{ help_center.name }}?');"
+                                        class="btn btn-danger btn-sm" role="button" href="{{ url_for('help_center_delete', id=help_center.id) }}">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                {% else %}
+                                    <a onclick="return confirm('¿Seguro que deseas eliminar el centro de ayuda {{ help_center.name }}? Advertencia: Este centro de ayuda posee turnos que aún no fueron atendidos, ¿Desea proseguir igual?');"
+                                        class="btn btn-danger btn-sm" role="button" href="{{ url_for('help_center_delete', id=help_center.id) }}">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>

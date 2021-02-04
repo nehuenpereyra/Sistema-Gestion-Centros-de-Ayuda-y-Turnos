@@ -26,7 +26,7 @@ def unique(class_, query_filter):
             **{query_filter: field.data}).first()
 
         if object_db and object_db != object_form:
-            raise ValidationError(f'The value {field.data} is already loaded')
+            raise ValidationError(f'El valor "{field.data}" ya se encuentra cargado.')
 
     return _unique
 
@@ -42,15 +42,26 @@ def valid_number():
 
     return _valid_number
 
+def format_number(value):
+    try:
+        if phonenumbers.is_valid_number(phonenumbers.parse(value, "AR")):
+            return phonenumbers.format_number(
+                phonenumbers.parse(value, "AR"),
+                phonenumbers.PhoneNumberFormat.INTERNATIONAL
+            )
+    except:
+        return value
+    
+    return value
 
 class HelpCenterForm(FlaskForm):
 
     id = IntegerField(widget=HiddenInput())
-    name = StringField("Nombre", validators=[DataRequired(), Length(max=16)])
+    name = StringField("Nombre", validators=[DataRequired(), unique(HelpCenter, "name"), Length(max=64)])
     address = StringField("Dirección", validators=[
                           DataRequired(), Length(max=32)])
-    phone_number = TelField("Teléfono", validators=[
-                            DataRequired(), unique(HelpCenter, "phone_number"), valid_number()])
+    phone_number = TelField("Teléfono", validators=[DataRequired(), unique(HelpCenter, "phone_number"), valid_number()],
+                                            render_kw={"placeholder": "[+54] 294 410-2060"}, filters=[format_number])
     opening_time = TimeField("Hora de Apertura", validators=[DataRequired()])
     closing_time = TimeField("Hora de Cierre", validators=[DataRequired()])
 
@@ -71,8 +82,6 @@ class HelpCenterForm(FlaskForm):
 
     published = BooleanField("Publicado", default=True)
 
-    request_status = BooleanField("Aceptado")
-
     delete_view_protocol = BooleanField(
         "Eliminar Protocolo de Vista", default=False)
 
@@ -83,3 +92,8 @@ class HelpCenterForm(FlaskForm):
         self.center_type.choices = HelpCenterType.query.all() \
             .collect(lambda each: (each.id, each.name))
         self.town.choices = Town.all().collect(lambda each: (each.id, each.name))
+
+    def validate_opening_time(form, field):
+        if form.closing_time.data:
+            if field.data >= form.closing_time.data:
+                raise ValidationError('La hora de apertura debe ser menor a la hora de cierre.')

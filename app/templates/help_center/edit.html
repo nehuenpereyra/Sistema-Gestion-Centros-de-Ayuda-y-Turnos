@@ -11,9 +11,8 @@
 
     {{ super() }}
 
-
     {% if not help_center.is_in_pending_state() %}
-        <div class="form-check">{{ checkbox_input(form.request_status) }}</div>
+        {{ radio_input(form.request_status) }}
     {% endif %}
 
     {% if help_center.has_view_protocol %}

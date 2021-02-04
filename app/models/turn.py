@@ -31,6 +31,9 @@ class Turn(db.Model):
             self._donor_phone_number = phonenumbers.format_number(
                 phonenumbers.parse(phone, "AR"), phonenumbers.PhoneNumberFormat.INTERNATIONAL)
 
+    def is_pending(self):
+        return datetime.now() < self.day_hour
+
     def save(self):
         if not self.id:
             db.session.add(self)

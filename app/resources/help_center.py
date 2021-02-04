@@ -6,7 +6,8 @@ from app.helpers.permission import permission
 from app.helpers.alert import add_alert, get_alert
 from app.helpers.forms.HelpCenterSeekerForm import HelpCenterSeekerForm
 
-from app.helpers.forms.HelpCenterForm import HelpCenterForm
+from app.helpers.forms.HelpCenterUpdateForm import HelpCenterUpdateForm
+from app.helpers.forms.HelpCenterCreateForm import HelpCenterCreateForm
 from app.models.alert import Alert
 from app.models.configuration import Configuration
 from app.models.help_center import HelpCenter
@@ -30,13 +31,13 @@ def index():
 @login_required
 @permission('help_center_create')
 def new():
-    return render_template("help_center/new.html", form=HelpCenterForm())
+    return render_template("help_center/new.html", form=HelpCenterCreateForm())
 
 
 @ login_required
 @ permission('help_center_create')
 def create():
-    form = HelpCenterForm(id=None)
+    form = HelpCenterCreateForm(id=None)
 
     if not form.validate_on_submit():
         return render_template("help_center/new.html", form=form)
@@ -48,7 +49,11 @@ def create():
                              opening_time=form.opening_time.data, closing_time=form.closing_time.data,
                              center_type=center_type, town=town, web_url=form.web_url.data, email=form.email.data,
                              view_protocol=form.view_protocol.data, latitude=form.latitude.data,
-                             longitude=form.longitude.data, published=form.published.data, request_status=True)
+                             longitude=form.longitude.data, published=form.published.data)
+    
+    if form.request_status.data == "accepted":
+        help_center.accept_request()
+    
     help_center.save()
     add_alert(Alert(
         "success", f"El centro de ayuda \"{help_center.name}\" fue cargado con exito."))
@@ -66,9 +71,15 @@ def edit(id):
         add_alert(Alert("danger", "El centro de ayuda no existe."))
         return redirect(url_for("help_center_index"))
 
-    form = HelpCenterForm(obj=help_center)
+    form = HelpCenterUpdateForm(obj=help_center)
     form.center_type.data = help_center.center_type.id
     form.town.data = help_center.town.id
+    
+    if not help_center.is_in_pending_state():
+        if help_center.is_in_accepted_state():
+            form.request_status.data = "accepted"
+        else:
+            form.request_status.data = "rejected"
 
     return render_template("help_center/edit.html", form=form, help_center=help_center)
 
@@ -83,7 +94,7 @@ def update(id):
         add_alert(Alert("danger", "El centro de ayuda no existe."))
         return redirect(url_for("help_center_index"))
 
-    form = HelpCenterForm(id=id)
+    form = HelpCenterUpdateForm(id=id)
 
     if not form.validate_on_submit():
         return render_template("help_center/edit.html", form=form, help_center=help_center)
@@ -107,7 +118,10 @@ def update(id):
         help_center.view_protocol = form.view_protocol.data
 
     if not help_center.is_in_pending_state():
-        help_center.request_status = form.request_status.data
+        if form.request_status.data == "rejected":
+            help_center.reject_request()
+        else:
+            help_center.accept_request()
 
     help_center.save()
 
