@@ -5,6 +5,7 @@ import phonenumbers
 
 from flask import current_app
 from sqlalchemy import func, desc
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from app.db import db
 
@@ -16,7 +17,7 @@ from app.models.town import Town
 class HelpCenter(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(32), nullable=False, unique=False)
+    name = db.Column(db.String(64), nullable=False, unique=True)
     address = db.Column(db.String(32), nullable=False, unique=False)
     _phone_number = db.Column("phone_number", db.String(
         16), nullable=False, unique=True)
@@ -133,7 +134,7 @@ class HelpCenter(db.Model):
         self.town_id = value.id
         self.town_object = value
 
-    @property
+    @hybrid_property
     def phone_number(self):
         return self._phone_number
 
@@ -216,6 +217,9 @@ class HelpCenter(db.Model):
 
     def has_turn(self, turn):
         return self.turns.includes(turn)
+
+    def has_pending_turns(self):
+        return self.turns.any_satisfy(lambda each: each.is_pending())
 
     @staticmethod
     def search(search_query, help_center_state, page, per_page):

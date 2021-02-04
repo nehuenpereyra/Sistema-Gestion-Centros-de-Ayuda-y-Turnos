@@ -24,7 +24,7 @@ def unique(class_, query_filter):
             **{query_filter: field.data}).first()
 
         if object_db and object_db != object_form:
-            raise ValidationError(f'The value {field.data} is already loaded')
+            raise ValidationError(f'El valor "{field.data}" ya se encuentra cargado.')
 
     return _unique
 
@@ -32,7 +32,7 @@ def unique(class_, query_filter):
 class HelpCenterApiForm(FlaskForm):
 
     id = IntegerField()
-    nombre = StringField(validators=[DataRequired(), Length(max=16)])
+    nombre = StringField(validators=[DataRequired(), unique(HelpCenter, "name"), Length(max=64)])
     direccion = StringField(validators=[DataRequired(), Length(max=32)])
     telefono = TelField(
         validators=[DataRequired(), unique(HelpCenter, "phone_number")])

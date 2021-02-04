@@ -33,6 +33,9 @@ class Turn(db.Model):
         if phone == "":
             self._donor_phone_number = ""
 
+    def is_pending(self):
+        return datetime.now() < self.day_hour
+
     def save(self):
         if not self.id:
             db.session.add(self)

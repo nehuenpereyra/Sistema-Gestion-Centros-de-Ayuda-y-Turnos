@@ -6,3 +6,11 @@
 {% block form_title %}Crear Centro de Ayuda{% endblock %}
 
 {% block form_action %}{{ url_for("help_center_create") }}{% endblock %}
+
+{% block form_data %}
+
+    {{ super() }}
+
+    {{ radio_input(form.request_status) }}
+
+{% endblock %}
