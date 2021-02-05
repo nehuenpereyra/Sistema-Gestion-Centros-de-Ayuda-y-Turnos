@@ -84,7 +84,8 @@ def reserved(id):
             donor_phone_number = data['telefono_donante']
 
         # Se crea uns instancia del formulario con los datos recibidos
-        form = TurnForm(id=None, day_hour=data_time_init,
+        form = TurnForm(id=None, date_turn=data_time_init.date(),
+                        time_turn=data_time_init.time(),
                         center_id=id, email=data['email_donante'],
                         donor_phone_number=donor_phone_number, meta={
                             'csrf': False},
@@ -95,7 +96,8 @@ def reserved(id):
             Turn(help_center=center,
                  email=form.email.data,
                  donor_phone_number=form.donor_phone_number.data,
-                 day_hour=form.day_hour.data,
+                 day_hour=datetime.combine(
+                     form.date_turn.data, form.time_turn.data),
                  name=form.name.data,
                  surname=form.surname.data).save()
 

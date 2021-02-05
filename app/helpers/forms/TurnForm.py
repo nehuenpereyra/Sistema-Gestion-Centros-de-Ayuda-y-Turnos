@@ -37,7 +37,6 @@ def time_exact():
 def unique():
     def _unique(form, field):
         message = f'Un turno en ese día y horario ya fue reservado.'
-        print(f"El id del turno es: {form.id.data}")
         if form.time_turn.data and (HelpCenter.query.get(form.center_id.data).turns.any_satisfy(lambda each: (each.day_hour == datetime.combine(field.data, form.time_turn.data)) and (each.id != form.id.data))):
             raise ValidationError(message)
     return _unique
