@@ -10,6 +10,7 @@ from app.models.help_center import HelpCenter
 from app.helpers.forms.TurnForm import TurnForm
 from app.helpers.permission import permission
 from app.helpers.alert import add_alert, get_alert
+from app.helpers.previous_route import add_route, get_route
 from app.helpers.forms.TurnSeekerForm import TurnSeekerForm
 import json
 
@@ -22,7 +23,7 @@ def index():
                                email=search_form.email.data,
                                page=int(request.args.get('page', 1)),
                                per_page=Configuration.query.first().pagination_elements)
-
+    add_route(url_for("turn_index"))
     return render_template("turn/index.html", turns=turns, alert=get_alert(), search_form=search_form)
 
 
@@ -48,6 +49,7 @@ def center_index(id):
     turns = Turn.search(id_center=id, email=search_form.email.data, page=int(request.args.get('page', 1)),
                         per_page=Configuration.query.first().pagination_elements)
 
+    add_route(url_for("turn_center_index", id=id))
     return render_template("turn/center_index.html", id_center=id, turns=turns, alert=get_alert(), center=center, search_form=search_form, today=datetime.today())
 
 
@@ -127,7 +129,7 @@ def update(id, id_turn):
     add_alert(
         Alert("success", f"El turno de {turn.email} se actualizo correctamente."))
 
-    return redirect(url_for("turn_center_index", id=id))
+    return redirect(get_route())
 
 
 @login_required
