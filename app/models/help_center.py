@@ -60,6 +60,7 @@ class HelpCenter(db.Model):
         self.turns = []
 
     def public_dict(self):
+        """returns a dictionary with public information from a help center."""
 
         result = {
             "id": self.id,
@@ -109,18 +110,28 @@ class HelpCenter(db.Model):
             db.session.commit()
 
     def is_in_pending_state(self):
+        "Returns true if the help center is in pending state. Otherwise, false is returned."
+
         return self.request_status == None
 
     def is_in_rejected_state(self):
+        "Returns true if the help center is in rejected state. Otherwise, false is returned."
+
         return self.request_status == False
 
     def is_in_accepted_state(self):
+        "Returns true if the help center is in accepted state. Otherwise, false is returned."
+
         return self.request_status
 
     def accept_request(self):
+        "Accept the help center request."
+
         self.request_status = True
 
     def reject_request(self):
+        "Reject the help center request."
+
         self.request_status = False
 
     @ property
@@ -150,16 +161,23 @@ class HelpCenter(db.Model):
         self.view_protocol_file = file
 
     def get_upload_path(self):
+        "Returns the upload path for the view protocols"
+
         return f'{current_app.config["UPLOAD_FOLDER"]}/protocolos'
 
     def get_view_protocol_filename(self):
+        "Returns the file name of the view protocol"
+
         return f"Protocolo_{self.id}.pdf"
 
     def get_view_protocol_path(self):
+        "Returns the full path of the view protocol file"
+
         return self.get_upload_path() + "/" + self.get_view_protocol_filename()
         # return os.path.join(self.get_upload_path(), self.get_view_protocol_filename())
 
     def update_view_protocol(self):
+        "Update the view protocol file."
 
         if self.has_view_protocol:
             self.view_protocol_file.save(self.get_view_protocol_path())
@@ -173,6 +191,15 @@ class HelpCenter(db.Model):
         fget=None, fset=set_view_protocol, fdel=None, doc=None)
 
     def reserve_turn(self, email_donante, telefono_donante, hora_inicio, fecha):
+        """Request a turn.
+
+        Keyword arguments:
+        email_donante -- string donor email
+        telefono_donante -- string donor phone
+        hora_inicio -- time start time of turn
+        fecha -- datetime date and time of turn
+        """
+        
         if not Turn.all_reserved_date(self.id, fecha).any_satisfy(lambda each: each.day_hour.time() == hora_inicio):
             Turn(help_center=self,
                  email=email_donante,
@@ -185,10 +212,24 @@ class HelpCenter(db.Model):
 
     @staticmethod
     def get_public_center(id):
+        """Returns an accepted and public help center.
+        
+        Keyword arguments:
+        id -- integer help center id
+        """
+
         return HelpCenter.query.filter_by(request_status=True, published=True, id=id).first()
 
     @staticmethod
     def all_published(page=1, per_page=None, search_query=None):
+        """Returns all public help centers in a page and, optionally, filtered by name.
+        
+        Keyword arguments:
+        page -- integer page number
+        per_page -- integer number of elements per page
+        search_query -- string filter by help center name
+        """
+
         query = HelpCenter.query.filter_by(request_status=True, published=True)
 
         if search_query:
@@ -198,6 +239,12 @@ class HelpCenter(db.Model):
 
     @staticmethod
     def get_with_more_turns(limit):
+        """Returns the N help centers with the highest number of turns.
+
+        Keyword arguments:
+        limit -- integer maximum number of help centers to return
+        """
+
         Turn = HelpCenter.turns.property.mapper.class_
 
         return db.session.query(HelpCenter, func.count(Turn.help_center_id).label('turns_quantity')) \
@@ -216,13 +263,30 @@ class HelpCenter(db.Model):
         return None
 
     def has_turn(self, turn):
+        """Returns true if the help center contains the turn it receives as an argument. Otherwise, false is returned.
+        
+        Keyword arguments:
+        turn -- Turn turn object
+        """
+
         return self.turns.includes(turn)
 
     def has_pending_turns(self):
+        "Returns true if the help center has pending turns. Otherwise, false is returned."
+
         return self.turns.any_satisfy(lambda each: each.is_pending())
 
     @staticmethod
     def search(search_query, help_center_state, page, per_page):
+        """Returns a paginated and filtered list of help centers.
+
+        Keyword arguments:
+        search_query -- string filter by help center name
+        help_center_state -- string filter by help center state (options: pending, accepted, rejected). In case of an invalid option, the rejected state is used.
+        page -- integer page number
+        per_page -- integer number of elements per page
+        """
+
         query = HelpCenter.query
 
         if search_query:

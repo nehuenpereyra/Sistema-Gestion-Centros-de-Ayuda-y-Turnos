@@ -83,6 +83,12 @@ def create():
 
 
 def more_turns():
+    """Returns the help centers with the most number of turns requested.
+
+    parameters:
+    cantidad -- integer (optional, default: 10) maximum number of help centers to return
+    """
+
     quantity = int(request.args.get("cantidad", 10))
 
     if quantity < 1:
