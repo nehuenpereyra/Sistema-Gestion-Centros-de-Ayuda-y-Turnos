@@ -39,22 +39,28 @@
         <ul class="list-group border rounded shadow-sm mt-3">
             {% for turn in turns.items %}
                 <li class="list-group-item">
-                    <div class="row d-flex">
-                        <div class="col-12 d-flex justify-content-center justify-content-sm-start col-sm mb-2 mb-sm-0">
-                            <div class="text-center text-sm-left">
-                            <span class="d-block">{{ turn.help_center.name }}</span>
-                            <span class="d-block">{{ turn.day_hour.strftime("%d/%m/%Y, %H:%M")}}</span>
-                                <span class="d-block">{{ turn.email }}</span>
-                                {% if turn.name and turn.surname %}
-                                        <span class="d-block">  {{ turn.name }} {{ turn.surname}}</span>
-                                    {% endif %}
-                                {% if turn.donor_phone_number %}
-                                    <small>{{ turn.donor_phone_number }}</small>
-                                {% endif %}
+                        <div class="row d-flex">
+                            <div class="col-12 d-flex justify-content-center justify-content-sm-start col-sm mb-2 mb-sm-0">
+                                <div class="text-center text-sm-left">
+                                    <span class="d-block">{{ turn.help_center.name }}</span>
+                                    <span class="d-block">{{ turn.day_hour.strftime("%d/%m/%Y, %H:%M")}}</span>
+                                        <span class="d-block">{{ turn.email }}</span>
+                                        {% if turn.name and turn.surname %}
+                                                <span class="d-block">  {{ turn.name }} {{ turn.surname}}</span>
+                                            {% endif %}
+                                        {% if turn.donor_phone_number %}
+                                            <small>{{ turn.donor_phone_number }}</small>
+                                        {% endif %}
+                                </div>
+                                
                             </div>
-                            
+                            <div class="col-12 col-sm-auto d-flex justify-content-center align-items-center">
+                                <a class="btn btn-primary btn-sm mr-1" role="button" href="{{ url_for('turn_edit',id=turn.help_center_id , id_turn=turn.id) }}">
+                                    <i class="fas fa-cog"></i>
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    
                 </li>
             {% endfor %}
         </ul>
