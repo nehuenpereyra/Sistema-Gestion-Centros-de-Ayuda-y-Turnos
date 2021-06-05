@@ -40,6 +40,10 @@
                                             </div>
                                         </div><button class="btn btn-primary btn-block text-white btn-user" type="submit" style="background-color: #3a6ba6;">Ingresar</button></form>
                                     <div class="text-center"></div>
+                                    
+                                    <div class="row">
+                                      <div class="col-md-12"> <a class="btn btn-lg mt-2 border-2 border btn-block text-uppercase btn-outline" href="{{ url_for('login_google') }}"><img src="{{ url_for('static', filename='img/google-logo.png') }}"> CONTINUAR CON GOOGLE</a> </div>
+                                    </div>
                                     <div class="text-center"></div>
                                     {% if authError == True %}
                                       <div class="alert alert-danger" role="alert" style="margin-top: 25px;">

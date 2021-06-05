@@ -8,3 +8,5 @@ def set_routes(app):
     app.add_url_rule(
         "/autenticacion", "auth_authenticate", auth.authenticate, methods=["POST"]
     )
+    app.add_url_rule("/login/google", "login_google", auth.login_google)
+    app.add_url_rule("/autorizar/google", "auth_google", auth.authorize_google)

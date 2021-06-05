@@ -7,6 +7,7 @@ from smallthon import sm_list
 from app.db import set_db
 from config.config import config
 from config.routes import set_routes
+from app.helpers.oauth import set_oauth
 from app.helpers.login import set_login, authenticated
 from app.helpers.permission import verify_permission
 from app.helpers.pagination import url_for_page
@@ -52,6 +53,9 @@ def create_app(environment="development"):
 
     # Establece las rutas que posee la app
     set_routes(app)
+
+    # Inicializa oauth
+    set_oauth(app)
 
     # Retornar la instancia de app configurada
     return app
