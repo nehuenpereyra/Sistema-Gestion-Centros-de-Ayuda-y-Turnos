@@ -1,17 +1,18 @@
 from . import BaseTestClass 
-from app.resources.user import User
 from werkzeug.security import generate_password_hash
 
+from app.resources.user import User
+from app.models.user_role import UserRole
+
 class UserModelTest(BaseTestClass):
+    """User model test suite"""
 
     def test_user_new(self):
         with self.app.app_context():
-            UserModelTest.create_user("test@test.com","test","test","test","123123").save()
-            result = User.find_by_email("test@test.com").get_email
-        self.assertEqual("test@test.com",result)
-
-    @staticmethod
-    def create_user(email, username, first_name, last_name, password):
-        return User(username= username ,email=email, 
-        first_name=first_name, last_name=last_name,
-        password=generate_password_hash(password))
+            roles = {each.name: each for each in UserRole.query.all()}
+            admin_user = User(name="Test", surname="Lopez", email="admin@admin.com",
+                          username="Juanchuz", password=generate_password_hash("admin123"),
+                          roles=[roles["Administrador"]])
+            admin_user.save()
+            result = User.find_by_email("admin@admin.com").get_email
+        self.assertEqual("admin@admin.com", result)
