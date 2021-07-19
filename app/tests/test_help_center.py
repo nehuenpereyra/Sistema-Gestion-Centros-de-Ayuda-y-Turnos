@@ -209,13 +209,3 @@ class HelpCenterTest(BaseTestClass):
             self.assertTrue(self.food_center_2.has_pending_turns())
             self.assertFalse(self.clothing_center.has_pending_turns())
             self.assertFalse(self.blood_center.has_pending_turns())
-
-    """ def test_search(self):
-        with self.app.app_context():
-            pass
-        
-    def test_reserve_turn(self):
-        with self.app.app_context():
-            pass
-    
-    """
