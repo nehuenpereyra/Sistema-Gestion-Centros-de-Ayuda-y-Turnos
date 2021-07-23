@@ -301,3 +301,7 @@ class HelpCenter(db.Model):
 
         return query.order_by(HelpCenter.name) \
             .paginate(page=page, per_page=per_page, error_out=False)
+
+    @staticmethod
+    def get_by_name(name):
+        return HelpCenter.query.filter_by(name=name).all()
